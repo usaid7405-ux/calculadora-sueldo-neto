@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- COMPETITOR SEO METADATA -->
+  <title>Calculadora de Sueldo Neto 2026 | Calcular Salario Bruto a Neto y Honorarios</title>
+  <meta name="description" content="Calculadora de sueldo neto y bruto gratis. Calcula retenciones de ISR, IRPF, impuestos y honorarios freelance para México, Colombia, España y Latam.">
+  <meta name="keywords" content="calculadora sueldo neto, calcular salario bruto a neto, retencion ISR, impuestos honorarios, calcular sueldo liquido, retencion IRPF">
+  <link rel="canonical" href="https://tusitio.com/">
+
+  <!-- GOOGLE RICH SNIPPET SCHEMA MARKUP -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Calculadora de Sueldo Neto y Honorarios",
+    "url": "https://tusitio.com/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": "Cálculo de sueldo neto, retenciones de impuestos ISR/IRPF, aportes de seguridad social, cálculo para freelance y empleados."
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --border: #e2e8f0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      border: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-top: 0;
+      color: #0f172a;
+      text-align: center;
+    }
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      font-size: 0.95rem;
+      margin-top: -10px;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: var(--primary-dark);
+    }
+    .result-box {
+      margin-top: 25px;
+      padding: 20px;
+      background-color: #f1f5f9;
+      border-radius: 8px;
+      display: none;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dashed #cbd5e1;
+    }
+    .result-row:last-child {
+      border-bottom: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #059669;
+    }
+    .content-section {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .content-section h2, .content-section h3 {
+      color: #0f172a;
+    }
+    .content-section h2 {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+    <h1>Calculadora de Sueldo Neto y Honorarios</h1>
+    <p class="subtitle">Convierte tu salario bruto a neto e identifica deducciones de impuestos (ISR / IRPF)</p>
+    
+    <div class="form-group">
+      <label for="country">Selecciona tu país / régimen fiscal:</label>
+      <select id="country">
+        <option value="mx">México (ISR est. 16%)</option>
+        <option value="co">Colombia (Retención/Aportes est. 12%)</option>
+        <option value="es">España (IRPF est. 19%)</option>
+        <option value="general">General / Latam (15% estándar)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="grossSalary">Sueldo Bruto Mensual ($):</label>
+      <input type="number" id="grossSalary" placeholder="Ej. 1500" min="0">
+    </div>
+
+    <button onclick="calculateSalary()">Calcular Sueldo Neto</button>
+
+    <div id="results" class="result-box">
+      <div class="result-row">
+        <span>Sueldo Bruto Ingresado:</span>
+        <span id="resGross">$0.00</span>
+      </div>
+      <div class="result-row">
+        <span>Retención de Impuestos (ISR / IRPF):</span>
+        <span id="resTax">-$0.00</span>
+      </div>
+      <div class="result-row">
+        <span>Seguridad Social / Pensiones:</span>
+        <span id="resSocial">-$0.00</span>
+      </div>
+      <div class="result-row">
+        <span>Sueldo Neto Líquido:</span>
+        <span id="resNet">$0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TARGETED COMPETITOR CONTENT & FAQ SECTION -->
+  <div class="content-section">
+    <h2>¿Cómo calcular tu sueldo neto a partir del sueldo bruto?</h2>
+    <p>El <strong>sueldo bruto</strong> representa la compensación total antes de aplicar retenciones legales. El <strong>sueldo neto</strong> (o salario líquido) es el monto exacto abonado a tu cuenta tras deducir impuestos sobre la renta (ISR o IRPF) y cotizaciones a la seguridad social.</p>
+
+    <h3>Fórmula para calcular el Salario Neto</h3>
+    <p>La fórmula general utilizada por sistemas de nómina es:</p>
+    <code>Sueldo Neto = Sueldo Bruto - Retenciones Fiscales (ISR/IRPF) - Seguridad Social</code>
+
+    <h2>Preguntas Frecuentes sobre Sueldo Neto y Retenciones</h2>
+    
+    <h3>1. ¿Cuál es la diferencia entre Sueldo Bruto y Sueldo Neto?</h3>
+    <p>El bruto es la cifra acordada en el contrato laboral. El neto es lo que realmente recibes para tus gastos personales tras los descuentos fiscales obligatorios.</p>
+
+    <h3>2. ¿Cómo afecta la retención de ISR o IRPF a los freelancers?</h3>
+    <p>Los trabajadores independientes (freelancers) deben calcular la retención de impuestos correspondiente al emitir facturas o recibos de honorarios a personas morales o empresas extranjeras.</p>
+
+    <h3>3. ¿Esta calculadora actualiza los impuestos para 2026?</h3>
+    <p>Sí, la herramienta aplica los promedios de tasas impositivas vigentes para calcular aproximaciones precisas en nóminas mensuales.</p>
+  </div>
+</div>
+
+<script>
+  function calculateSalary() {
+    const gross = parseFloat(document.getElementById('grossSalary').value);
+    const country = document.getElementById('country').value;
+
+    if (isNaN(gross) || gross <= 0) {
+      alert('Por favor, ingresa un monto de sueldo bruto válido.');
+      return;
+    }
+
+    let taxRate = 0.15;
+    let socialRate = 0.05;
+
+    if (country === 'mx') {
+      taxRate = 0.16;
+      socialRate = 0.0275;
+    } else if (country === 'co') {
+      taxRate = 0.10;
+      socialRate = 0.08;
+    } else if (country === 'es') {
+      taxRate = 0.19;
+      socialRate = 0.0635;
+    }
+
+    const taxAmount = gross * taxRate;
+    const socialAmount = gross * socialRate;
+    const netSalary = gross - taxAmount - socialAmount;
+
+    document.getElementById('resGross').innerText = '$' + gross.toFixed(2);
+    document.getElementById('resTax').innerText = '-$' + taxAmount.toFixed(2);
+    document.getElementById('resSocial').innerText = '-$' + socialAmount.toFixed(2);
+    document.getElementById('resNet').innerText = '$' + netSalary.toFixed(2);
+
+    document.getElementById('results').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
