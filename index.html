@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Calculadora de Sueldo Neto 2026 | Salario Bruto a Neto y Honorarios</title>
-  <meta name="description" content="Calculadora de sueldo neto y bruto interactiva gratis. Visualiza retenciones de ISR, IRPF, seguros y honorarios freelance en México, Colombia, España y Latam.">
-  <meta name="keywords" content="calculadora sueldo neto, calcular salario bruto a neto, retencion ISR, impuestos honorarios, retencion IRPF">
+  <title>Calculadora de Sueldo Neto 2026 | Salario Bruto a Neto e Impuestos</title>
+  <meta name="description" content="Calculadora de sueldo neto y bruto 2026 gratis. Calcula tu salario líquido real con retenciones de ISR, IRPF, seguros y honorarios en México, Colombia, España y LATAM.">
+  <meta name="keywords" content="calculadora sueldo neto 2026, calcular salario bruto a neto, retencion ISR, impuestos honorarios, retencion IRPF, sueldo liquido">
   <meta name="google-site-verification" content="pl8VKu4miXjCryxIBvGF42JT68K2FOyj5GZ1E2aZHYI" />
   <link rel="canonical" href="https://sueldopro.online/">
 
   <!-- Chart.js for Visual Breakdown -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- WebApp Schema -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -29,6 +30,29 @@
   }
   </script>
 
+  <!-- FAQ Schema for Google Rich Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "¿Cómo calcular el sueldo neto a partir del sueldo bruto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "El sueldo neto se calcula restando del sueldo bruto las deducciones obligatorias de ley, tales como impuestos sobre la renta (ISR/IRPF) y cotizaciones a la seguridad social (salud y pensiones)."
+      }
+    },{
+      "@type": "Question",
+      "name": "¿Cuál es la diferencia entre sueldo bruto y sueldo neto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "El sueldo bruto es la cantidad total pactada en el contrato antes de impuestos, mientras que el sueldo neto es la cifra final depositada en la cuenta bancaria del trabajador."
+      }
+    }]
+  }
+  </script>
+
   <style>
     :root {
       --primary: #2563eb;
@@ -41,11 +65,7 @@
       --border: #e2e8f0;
     }
     
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -55,26 +75,11 @@
       padding: 24px 12px;
     }
 
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-    }
+    .container { max-width: 960px; margin: 0 auto; }
 
-    .header-tag {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .header-tag h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .header-tag p {
-      color: var(--muted);
-      font-size: 1rem;
-    }
+    .header-tag { text-align: center; margin-bottom: 24px; }
+    .header-tag h1 { font-size: 2rem; font-weight: 800; color: var(--text); }
+    .header-tag p { color: var(--muted); font-size: 1rem; }
 
     .app-layout {
       display: grid;
@@ -84,9 +89,7 @@
     }
 
     @media (min-width: 768px) {
-      .app-layout {
-        grid-template-columns: 1fr 1fr;
-      }
+      .app-layout { grid-template-columns: 1fr 1fr; }
     }
 
     .card {
@@ -97,9 +100,7 @@
       border: 1px solid var(--border);
     }
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+    .form-group { margin-bottom: 20px; }
 
     label {
       display: block;
@@ -152,24 +153,10 @@
       margin-bottom: 20px;
     }
 
-    .stat-main .amount {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--accent);
-    }
+    .stat-main .amount { font-size: 2.2rem; font-weight: 800; color: var(--accent); }
+    .stat-main .label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
 
-    .stat-main .label {
-      font-size: 0.85rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 600;
-    }
-
-    .breakdown-list {
-      list-style: none;
-      margin-bottom: 20px;
-    }
+    .breakdown-list { list-style: none; margin-bottom: 20px; }
 
     .breakdown-item {
       display: flex;
@@ -179,14 +166,9 @@
       font-size: 0.95rem;
     }
 
-    .breakdown-item strong {
-      color: #334155;
-    }
+    .breakdown-item strong { color: #334155; }
 
-    .chart-box {
-      max-width: 220px;
-      margin: 10px auto;
-    }
+    .chart-box { max-width: 220px; margin: 10px auto; }
 
     .content-card {
       background: var(--card-bg);
@@ -204,21 +186,9 @@
       padding-bottom: 6px;
     }
 
-    .content-card h3 {
-      font-size: 1.1rem;
-      margin: 18px 0 8px 0;
-      color: #1e293b;
-    }
-
-    .content-card p, .content-card li {
-      color: #475569;
-      font-size: 0.95rem;
-    }
-
-    .content-card ul {
-      margin-left: 20px;
-      margin-bottom: 16px;
-    }
+    .content-card h3 { font-size: 1.1rem; margin: 18px 0 8px 0; color: #1e293b; }
+    .content-card p, .content-card li { color: #475569; font-size: 0.95rem; }
+    .content-card ul { margin-left: 20px; margin-bottom: 16px; }
 
     .btn-action {
       background: var(--primary);
@@ -233,9 +203,7 @@
       transition: background 0.2s;
     }
 
-    .btn-action:hover {
-      background: var(--primary-dark);
-    }
+    .btn-action:hover { background: var(--primary-dark); }
 
     .btn-secondary {
       background: #e2e8f0;
@@ -250,16 +218,14 @@
       transition: background 0.2s;
     }
 
-    .btn-secondary:hover {
-      background: #cbd5e1;
-    }
+    .btn-secondary:hover { background: #cbd5e1; }
   </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header-tag">
-    <h1>Calculadora de Sueldo Neto Pro</h1>
+    <h1>Calculadora de Sueldo Neto 2026 Pro</h1>
     <p>Calcula tu salario líquido real y desglose de impuestos al instante</p>
   </div>
 
@@ -344,14 +310,14 @@
 
   <!-- ARTICLE CONTENT FOR SEO AND ADSENSE -->
   <div class="content-card">
-    <h2>¿Cómo funciona el cálculo de Sueldo Bruto a Neto?</h2>
-    <p>El <strong>sueldo bruto</strong> es la cifra pactada en tu contrato de trabajo o propuesta de honorarios. Sin embargo, antes de depositar tu salario, los empleadores están obligados a retener aportes impositivos y de seguridad social.</p>
+    <h2>¿Cómo funciona el cálculo de Sueldo Bruto a Neto en 2026?</h2>
+    <p>El <strong>sueldo bruto</strong> es la cifra pactada en tu contrato de trabajo o propuesta de honorarios. Sin embargo, antes de depositar tu salario, los empleadores están obligados a retener aportes impositivos y de seguridad social de acuerdo con la legislación laboral vigente.</p>
 
     <h3>Factores principales que reducen tu salario bruto:</h3>
     <ul>
       <li><strong>Impuesto sobre la Renta (ISR / IRPF):</strong> Porcentaje progresivo determinado por la administración tributaria según tu tramo salarial.</li>
-      <li><strong>Aportes a la Salud y Pensión:</strong> Cotizaciones obligatorias para fondos de retiro y cobertura médica.</li>
-      <li><strong>Retenciones Freelance:</strong> Ajustes impositivos específicos aplicables al emitir facturas de honorarios profesionales.</li>
+      <li><strong>Aportes a la Salud y Pensión:</strong> Cotizaciones obligatorias para fondos de retiro y cobertura médica (EPS, AFPs, IMSS, etc.).</li>
+      <li><strong>Retenciones Freelance:</strong> Ajustes impositivos específicos aplicables al emitir facturas o recibos de honorarios profesionales.</li>
     </ul>
 
     <h2>Preguntas Frecuentes (FAQ)</h2>
@@ -390,9 +356,7 @@
       },
       options: {
         responsive: true,
-        plugins: {
-          legend: { display: false }
-        },
+        plugins: { legend: { display: false } },
         cutout: '70%'
       }
     });
@@ -468,9 +432,7 @@
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.getElementById('copyBtn');
       btn.innerText = '✅ ¡Copiado al Portapapeles!';
-      setTimeout(() => {
-        btn.innerText = '📋 Copiar Resumen de Sueldo';
-      }, 2500);
+      setTimeout(() => { btn.innerText = '📋 Copiar Resumen de Sueldo'; }, 2500);
     });
   }
 
