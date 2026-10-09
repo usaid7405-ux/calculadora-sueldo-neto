@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Calculadora de Sueldo Neto México 2026 | Retención ISR e IMSS</title>
+  <meta name="description" content="Calcula tu salario neto real en México (MXN). Obtén el desglose de retenciones de ISR, cuotas del IMSS y sueldo bruto a líquido para empleados y resico.">
+  <meta name="keywords" content="calculadora sueldo neto mexico, calcular salario neto mx, retencion ISR 2026, cuotas IMSS, sueldo bruto a neto mexico">
+  <meta name="google-site-verification" content="pl8VKu4miXjCryxIBvGF42JT68K2FOyj5GZ1E2aZHYI" />
+  <link rel="canonical" href="https://sueldopro.online/mexico/">
+
+  <!-- Chart.js for Visual Breakdown -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Calculadora de Sueldo Neto México - SueldoPro",
+    "url": "https://sueldopro.online/mexico/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "MXN"
+    }
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #047857;
+      --accent: #10b981;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px 12px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .header-tag {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header-tag h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .header-tag p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    @media (min-width: 768px) {
+      .app-layout {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: #334155;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .slider-container input[type="range"] {
+      flex: 1;
+      accent-color: var(--primary);
+    }
+
+    .results-display {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    .stat-main {
+      text-align: center;
+      padding: 20px;
+      background: #f0fdf4;
+      border-radius: 12px;
+      border: 1px solid #bbf7d0;
+      margin-bottom: 20px;
+    }
+
+    .stat-main .amount {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .stat-main .label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .breakdown-list {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+
+    .breakdown-item strong {
+      color: #334155;
+    }
+
+    .chart-box {
+      max-width: 220px;
+      margin: 10px auto;
+    }
+
+    .content-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+    }
+
+    .content-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: #0f172a;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 6px;
+    }
+
+    .content-card h3 {
+      font-size: 1.1rem;
+      margin: 18px 0 8px 0;
+      color: #1e293b;
+    }
+
+    .content-card p, .content-card li {
+      color: #475569;
+      font-size: 0.95rem;
+    }
+
+    .content-card ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .btn-action {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-action:hover {
+      background: var(--primary-dark);
+    }
+
+    .nav-home {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="https://sueldopro.online/" class="nav-home">← Volver a la Calculadora Global</a>
+
+  <div class="header-tag">
+    <h1>Calculadora de Sueldo Neto México 2026 🇲🇽</h1>
+    <p>Calcula tu salario bruto a líquido, retención de ISR y aportaciones al IMSS</p>
+  </div>
+
+  <div class="app-layout">
+    <!-- INPUT FORM CARD -->
+    <div class="card">
+      <div class="form-group">
+        <label for="regime">Régimen Laboral / Contratación:</label>
+        <select id="regime" onchange="updateCalculation()">
+          <option value="asalariado">Asalariado / Sueldos y Salarios (ISR + IMSS)</option>
+          <option value="resico">RESICO (Simplificado de Confianza 1.5% - 2.5%)</option>
+          <option value="honorarios">Honorarios (Servicios Profesionales)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="grossSalary">Sueldo Bruto Mensual (MXN $):</label>
+        <input type="number" id="grossSalary" value="25000" min="0" oninput="updateCalculation()">
+        <div class="slider-container">
+          <input type="range" id="salarySlider" min="5000" max="150000" step="1000" value="25000" oninput="syncSlider(this.value)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="allowances">Deducciones Personales Estimadas (MXN $):</label>
+        <input type="number" id="allowances" value="0" min="0" oninput="updateCalculation()">
+      </div>
+      
+      <button class="btn-action" onclick="window.print()">🖨️ Imprimir / Guardar Desglose MXN</button>
+    </div>
+
+    <!-- DISPLAY RESULTS CARD -->
+    <div class="card">
+      <div class="results-display">
+        <div class="stat-main">
+          <span class="label">Sueldo Neto a Recibir (Mensual)</span>
+          <div class="amount" id="netAmount">$0.00 MXN</div>
+        </div>
+
+        <ul class="breakdown-list">
+          <li class="breakdown-item">
+            <span>Sueldo Bruto Mensual:</span>
+            <strong id="grossDisplay">$0.00</strong>
+          </li>
+          <li class="breakdown-item">
+            <span>Retención de ISR (SAT):</span>
+            <strong id="taxDisplay" style="color: #ef4444;">-$0.00</strong>
+          </li>
+          <li class="breakdown-item">
+            <span>Cuota Obrera IMSS:</span>
+            <strong id="socialDisplay" style="color: #f59e0b;">-$0.00</strong>
+          </li>
+        </ul>
+
+        <!-- DONUT CHART -->
+        <div class="chart-box">
+          <canvas id="salaryChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTICLE CONTENT FOR SEO -->
+  <div class="content-card">
+    <h2>¿Cómo calcular el Sueldo Neto en México?</h2>
+    <p>En México, la diferencia entre el <strong>sueldo bruto</strong> y el <strong>sueldo neto</strong> radica en las retenciones obligatorias que realiza el empleador antes de depositar la nómina. Estas retenciones son enviadas al SAT (Servicio de Administración Tributaria) y al IMSS (Instituto Mexicano del Seguro Social).</p>
+
+    <h3>Desglose de retenciones de nómina en México:</h3>
+    <ul>
+      <li><strong>Impuesto Sobre la Renta (ISR):</strong> Se calcula con base en la tarifa mensual progresiva del SAT. A mayor ingreso, mayor porcentaje de retención aplicado sobre la base gravable.</li>
+      <li><strong>Cuotas Obreras del IMSS:</strong> Corresponde al aporte del trabajador para prestaciones de salud, maternidad, invalidez, vida y retiro en edad avanzada.</li>
+      <li><strong>RESICO vs Asalariados:</strong> El Régimen Simplificado de Confianza ofrece tasas fijas reducidas (1% al 2.5%) para personas físicas con actividad empresarial o profesional.</li>
+    </ul>
+
+    <h2>Preguntas Frecuentes sobre la Nómina en México</h2>
+    <h3>1. ¿Qué es la UMA y cómo afecta la retención del IMSS?</h3>
+    <p>La Unidad de Medida y Actualización (UMA) establece los topes máximos y exenciones para el cálculo de cuotas de seguridad social.</p>
+
+    <h3>2. ¿Las prestaciones ley aumentan mi sueldo neto?</h3>
+    <p>Beneficios como el aguinaldo (mínimo 15 días) y la prima vacacional cuentan con exenciones parciales de ISR fijadas en UMA.</p>
+  </div>
+</div>
+
+<script>
+  let chartInstance = null;
+
+  function initChart() {
+    const ctx = document.getElementById('salaryChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Sueldo Neto', 'ISR (SAT)', 'Cuota IMSS'],
+        datasets: [{
+          data: [75, 20, 5],
+          backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        cutout: '70%'
+      }
+    });
+  }
+
+  function syncSlider(val) {
+    document.getElementById('grossSalary').value = val;
+    updateCalculation();
+  }
+
+  function updateCalculation() {
+    const gross = parseFloat(document.getElementById('grossSalary').value) || 0;
+    const allowances = parseFloat(document.getElementById('allowances').value) || 0;
+    const regime = document.getElementById('regime').value;
+    
+    document.getElementById('salarySlider').value = gross;
+
+    let taxRate = 0.16;
+    let socialRate = 0.0275;
+
+    if (regime === 'resico') {
+      taxRate = 0.02;
+      socialRate = 0.0;
+    } else if (regime === 'honorarios') {
+      taxRate = 0.10;
+      socialRate = 0.0;
+    }
+
+    const taxableBase = Math.max(0, gross - allowances);
+    const taxAmount = taxableBase * taxRate;
+    const socialAmount = taxableBase * socialRate;
+    const netSalary = gross - taxAmount - socialAmount;
+
+    document.getElementById('grossDisplay').innerText = '$' + gross.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
+    document.getElementById('taxDisplay').innerText = '-$' + taxAmount.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
+    document.getElementById('socialDisplay').innerText = '-$' + socialAmount.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
+    document.getElementById('netAmount').innerText = '$' + netSalary.toLocaleString('es-MX', {minimumFractionDigits: 2}) + ' MXN';
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [
+        Math.max(0, netSalary),
+        Math.max(0, taxAmount),
+        Math.max(0, socialAmount)
+      ];
+      chartInstance.update();
+    }
+  }
+
+  window.onload = function() {
+    initChart();
+    updateCalculation();
+  };
+</script>
+
+</body>
+</html>
