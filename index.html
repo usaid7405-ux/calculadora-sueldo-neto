@@ -230,10 +230,28 @@
       cursor: pointer;
       width: 100%;
       margin-top: 10px;
+      transition: background 0.2s;
     }
 
     .btn-action:hover {
       background: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #1e293b;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
     }
   </style>
 </head>
@@ -259,6 +277,14 @@
     <!-- INPUT FORM CARD -->
     <div class="card">
       <div class="form-group">
+        <label for="periodToggle">Periodo de Cálculo:</label>
+        <select id="periodToggle" onchange="updateCalculation()">
+          <option value="monthly">Mensual</option>
+          <option value="annual">Anual (x12)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label for="country">País / Régimen Fiscal:</label>
         <select id="country" onchange="updateCalculation()">
           <option value="mx">🇲🇽 México (ISR est. 16%)</option>
@@ -269,7 +295,7 @@
       </div>
 
       <div class="form-group">
-        <label for="grossSalary">Sueldo Bruto Mensual ($):</label>
+        <label for="grossSalary" id="grossLabel">Sueldo Bruto Mensual ($):</label>
         <input type="number" id="grossSalary" value="2500" min="0" oninput="updateCalculation()">
         <div class="slider-container">
           <input type="range" id="salarySlider" min="500" max="10000" step="100" value="2500" oninput="syncSlider(this.value)">
@@ -281,14 +307,15 @@
         <input type="number" id="allowances" value="0" min="0" oninput="updateCalculation()">
       </div>
       
-      <button class="btn-action" onclick="window.print()">🖨️ Imprimir / Guardar Desglose</button>
+      <button class="btn-action" onclick="copySummary()" id="copyBtn">📋 Copiar Resumen de Sueldo</button>
+      <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
     </div>
 
     <!-- DISPLAY RESULTS CARD -->
     <div class="card">
       <div class="results-display">
         <div class="stat-main">
-          <span class="label">Sueldo Neto a Recibir</span>
+          <span class="label" id="netLabel">Sueldo Neto a Recibir (Mensual)</span>
           <div class="amount" id="netAmount">$0.00</div>
         </div>
 
@@ -370,6 +397,7 @@
     const gross = parseFloat(document.getElementById('grossSalary').value) || 0;
     const allowances = parseFloat(document.getElementById('allowances').value) || 0;
     const country = document.getElementById('country').value;
+    const period = document.getElementById('periodToggle').value;
     
     document.getElementById('salarySlider').value = gross;
 
@@ -387,12 +415,17 @@
       socialRate = 0.0635;
     }
 
-    const taxableBase = Math.max(0, gross - allowances);
+    const multiplier = period === 'annual' ? 12 : 1;
+    document.getElementById('grossLabel').innerText = `Sueldo Bruto ${period === 'annual' ? 'Anual' : 'Mensual'} ($):`;
+    document.getElementById('netLabel').innerText = `Sueldo Neto a Recibir (${period === 'annual' ? 'Anual' : 'Mensual'})`;
+
+    const calcGross = gross * multiplier;
+    const taxableBase = Math.max(0, calcGross - allowances);
     const taxAmount = taxableBase * taxRate;
     const socialAmount = taxableBase * socialRate;
-    const netSalary = gross - taxAmount - socialAmount;
+    const netSalary = calcGross - taxAmount - socialAmount;
 
-    document.getElementById('grossDisplay').innerText = '$' + gross.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('grossDisplay').innerText = '$' + calcGross.toLocaleString('en-US', {minimumFractionDigits: 2});
     document.getElementById('taxDisplay').innerText = '-$' + taxAmount.toLocaleString('en-US', {minimumFractionDigits: 2});
     document.getElementById('socialDisplay').innerText = '-$' + socialAmount.toLocaleString('en-US', {minimumFractionDigits: 2});
     document.getElementById('netAmount').innerText = '$' + netSalary.toLocaleString('en-US', {minimumFractionDigits: 2});
@@ -405,6 +438,30 @@
       ];
       chartInstance.update();
     }
+  }
+
+  function copySummary() {
+    const gross = document.getElementById('grossDisplay').innerText;
+    const tax = document.getElementById('taxDisplay').innerText;
+    const social = document.getElementById('socialDisplay').innerText;
+    const net = document.getElementById('netAmount').innerText;
+    const period = document.getElementById('periodToggle').value === 'annual' ? 'Anual' : 'Mensual';
+
+    const text = `📊 Resumen de Sueldo (${period}) - SueldoPro.online\n` +
+                 `• Sueldo Bruto: ${gross}\n` +
+                 `• Impuestos: ${tax}\n` +
+                 `• Seguridad Social: ${social}\n` +
+                 `---------------------------\n` +
+                 `• Sueldo Neto a Recibir: ${net}\n\n` +
+                 `Calculado en https://sueldopro.online/`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.innerText = '✅ ¡Copiado al Portapapeles!';
+      setTimeout(() => {
+        btn.innerText = '📋 Copiar Resumen de Sueldo';
+      }, 2500);
+    });
   }
 
   window.onload = function() {
