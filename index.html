@@ -4,27 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- COMPETITOR SEO METADATA -->
-  <title>Calculadora de Sueldo Neto 2026 | Calcular Salario Bruto a Neto y Honorarios</title>
-  <meta name="description" content="Calculadora de sueldo neto y bruto gratis. Calcula retenciones de ISR, IRPF, impuestos y honorarios freelance para México, Colombia, España y Latam.">
-  <meta name="keywords" content="calculadora sueldo neto, calcular salario bruto a neto, retencion ISR, impuestos honorarios, calcular sueldo liquido, retencion IRPF">
-  <link rel="canonical" href="https://tusitio.com/">
+  <title>Calculadora de Sueldo Neto 2026 | Salario Bruto a Neto y Honorarios</title>
+  <meta name="description" content="Calculadora de sueldo neto y bruto interactiva gratis. Visualiza retenciones de ISR, IRPF, seguros y honorarios freelance en México, Colombia, España y Latam.">
+  <meta name="keywords" content="calculadora sueldo neto, calcular salario bruto a neto, retencion ISR, impuestos honorarios, retencion IRPF">
+  <link rel="canonical" href="https://usaid7405-ux.github.io/calculadora-sueldo-neto/">
 
-  <!-- GOOGLE RICH SNIPPET SCHEMA MARKUP -->
+  <!-- Chart.js for Visual Breakdown -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Calculadora de Sueldo Neto y Honorarios",
-    "url": "https://tusitio.com/",
+    "name": "Calculadora Pro de Sueldo Neto y Honorarios",
+    "url": "https://usaid7405-ux.github.io/calculadora-sueldo-neto/",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "All",
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "USD"
-    },
-    "featureList": "Cálculo de sueldo neto, retenciones de impuestos ISR/IRPF, aportes de seguridad social, cálculo para freelance y empleados."
+    }
   }
   </script>
 
@@ -32,185 +32,344 @@
     :root {
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
-      --bg: #f8fafc;
+      --accent: #10b981;
+      --bg: #f1f5f9;
       --card-bg: #ffffff;
-      --text: #1e293b;
+      --text: #0f172a;
+      --muted: #64748b;
       --border: #e2e8f0;
     }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      margin: 0;
-      padding: 20px;
+      padding: 24px 12px;
     }
+
     .container {
-      max-width: 800px;
+      max-width: 960px;
       margin: 0 auto;
     }
+
+    .header-tag {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header-tag h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .header-tag p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    @media (min-width: 768px) {
+      .app-layout {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     .card {
       background: var(--card-bg);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
       border: 1px solid var(--border);
     }
-    h1 {
-      font-size: 1.8rem;
-      margin-top: 0;
-      color: #0f172a;
-      text-align: center;
-    }
-    .subtitle {
-      text-align: center;
-      color: #64748b;
-      font-size: 0.95rem;
-      margin-top: -10px;
-      margin-bottom: 20px;
-    }
+
     .form-group {
       margin-bottom: 20px;
     }
+
     label {
       display: block;
       font-weight: 600;
       margin-bottom: 8px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      color: #334155;
     }
+
     input, select {
       width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
       font-size: 1rem;
-      box-sizing: border-box;
+      transition: all 0.2s;
     }
-    button {
-      width: 100%;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      padding: 14px;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
     }
-    button:hover {
-      background-color: var(--primary-dark);
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
     }
-    .result-box {
-      margin-top: 25px;
+
+    .slider-container input[type="range"] {
+      flex: 1;
+      accent-color: var(--primary);
+    }
+
+    .metric-badge {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    .results-display {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    .stat-main {
+      text-align: center;
       padding: 20px;
-      background-color: #f1f5f9;
-      border-radius: 8px;
-      display: none;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 20px;
     }
-    .result-row {
+
+    .stat-main .amount {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .stat-main .label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .breakdown-list {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+
+    .breakdown-item {
       display: flex;
       justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px dashed #cbd5e1;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
     }
-    .result-row:last-child {
-      border-bottom: none;
-      font-weight: bold;
-      font-size: 1.1rem;
-      color: #059669;
+
+    .breakdown-item strong {
+      color: #334155;
     }
-    .content-section {
+
+    .chart-box {
+      max-width: 220px;
+      margin: 10px auto;
+    }
+
+    .content-card {
       background: var(--card-bg);
-      padding: 24px;
-      border-radius: 12px;
+      border-radius: 16px;
+      padding: 32px;
       border: 1px solid var(--border);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
     }
-    .content-section h2, .content-section h3 {
+
+    .content-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
       color: #0f172a;
-    }
-    .content-section h2 {
       border-bottom: 2px solid var(--primary);
       padding-bottom: 6px;
+    }
+
+    .content-card h3 {
+      font-size: 1.1rem;
+      margin: 18px 0 8px 0;
+      color: #1e293b;
+    }
+
+    .content-card p, .content-card li {
+      color: #475569;
+      font-size: 0.95rem;
+    }
+
+    .content-card ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    .btn-action {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-action:hover {
+      background: var(--primary-dark);
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="card">
-    <h1>Calculadora de Sueldo Neto y Honorarios</h1>
-    <p class="subtitle">Convierte tu salario bruto a neto e identifica deducciones de impuestos (ISR / IRPF)</p>
-    
-    <div class="form-group">
-      <label for="country">Selecciona tu país / régimen fiscal:</label>
-      <select id="country">
-        <option value="mx">México (ISR est. 16%)</option>
-        <option value="co">Colombia (Retención/Aportes est. 12%)</option>
-        <option value="es">España (IRPF est. 19%)</option>
-        <option value="general">General / Latam (15% estándar)</option>
-      </select>
+  <div class="header-tag">
+    <h1>Calculadora de Sueldo Neto Pro</h1>
+    <p>Calcula tu salario líquido real y desglose de impuestos al instante</p>
+  </div>
+
+  <div class="app-layout">
+    <!-- INPUT FORM CARD -->
+    <div class="card">
+      <div class="form-group">
+        <label for="country">País / Régimen Fiscal:</label>
+        <select id="country" onchange="updateCalculation()">
+          <option value="mx">🇲🇽 México (ISR est. 16%)</option>
+          <option value="co">🇨🇴 Colombia (Retención est. 12%)</option>
+          <option value="es">🇪🇸 España (IRPF est. 19%)</option>
+          <option value="general">🌎 Latinoamérica / General (15%)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="grossSalary">Sueldo Bruto Mensual ($):</label>
+        <input type="number" id="grossSalary" value="2500" min="0" oninput="updateCalculation()">
+        <div class="slider-container">
+          <input type="range" id="salarySlider" min="500" max="10000" step="100" value="2500" oninput="syncSlider(this.value)">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="allowances">Deducciones Personales / Ajustes ($):</label>
+        <input type="number" id="allowances" value="0" min="0" oninput="updateCalculation()">
+      </div>
+      
+      <button class="btn-action" onclick="window.print()">🖨️ Imprimir / Guardar Desglose</button>
     </div>
 
-    <div class="form-group">
-      <label for="grossSalary">Sueldo Bruto Mensual ($):</label>
-      <input type="number" id="grossSalary" placeholder="Ej. 1500" min="0">
-    </div>
+    <!-- DISPLAY RESULTS CARD -->
+    <div class="card">
+      <div class="results-display">
+        <div class="stat-main">
+          <span class="label">Sueldo Neto a Recibir</span>
+          <div class="amount" id="netAmount">$0.00</div>
+        </div>
 
-    <button onclick="calculateSalary()">Calcular Sueldo Neto</button>
+        <ul class="breakdown-list">
+          <li class="breakdown-item">
+            <span>Sueldo Bruto Base:</span>
+            <strong id="grossDisplay">$0.00</strong>
+          </li>
+          <li class="breakdown-item">
+            <span>Impuestos (ISR / IRPF):</span>
+            <strong id="taxDisplay" style="color: #ef4444;">-$0.00</strong>
+          </li>
+          <li class="breakdown-item">
+            <span>Seguridad Social / Pensiones:</span>
+            <strong id="socialDisplay" style="color: #f59e0b;">-$0.00</strong>
+          </li>
+        </ul>
 
-    <div id="results" class="result-box">
-      <div class="result-row">
-        <span>Sueldo Bruto Ingresado:</span>
-        <span id="resGross">$0.00</span>
-      </div>
-      <div class="result-row">
-        <span>Retención de Impuestos (ISR / IRPF):</span>
-        <span id="resTax">-$0.00</span>
-      </div>
-      <div class="result-row">
-        <span>Seguridad Social / Pensiones:</span>
-        <span id="resSocial">-$0.00</span>
-      </div>
-      <div class="result-row">
-        <span>Sueldo Neto Líquido:</span>
-        <span id="resNet">$0.00</span>
+        <!-- DONUT CHART -->
+        <div class="chart-box">
+          <canvas id="salaryChart"></canvas>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- TARGETED COMPETITOR CONTENT & FAQ SECTION -->
-  <div class="content-section">
-    <h2>¿Cómo calcular tu sueldo neto a partir del sueldo bruto?</h2>
-    <p>El <strong>sueldo bruto</strong> representa la compensación total antes de aplicar retenciones legales. El <strong>sueldo neto</strong> (o salario líquido) es el monto exacto abonado a tu cuenta tras deducir impuestos sobre la renta (ISR o IRPF) y cotizaciones a la seguridad social.</p>
+  <!-- ARTICLE CONTENT FOR SEO AND ADSENSE -->
+  <div class="content-card">
+    <h2>¿Cómo funciona el cálculo de Sueldo Bruto a Neto?</h2>
+    <p>El <strong>sueldo bruto</strong> es la cifra pactada en tu contrato de trabajo o propuesta de honorarios. Sin embargo, antes de depositar tu salario, los empleadores están obligados a retener aportes impositivos y de seguridad social.</p>
 
-    <h3>Fórmula para calcular el Salario Neto</h3>
-    <p>La fórmula general utilizada por sistemas de nómina es:</p>
-    <code>Sueldo Neto = Sueldo Bruto - Retenciones Fiscales (ISR/IRPF) - Seguridad Social</code>
+    <h3>Factores principales que reducen tu salario bruto:</h3>
+    <ul>
+      <li><strong>Impuesto sobre la Renta (ISR / IRPF):</strong> Porcentaje progresivo determinado por la administración tributaria según tu tramo salarial.</li>
+      <li><strong>Aportes a la Salud y Pensión:</strong> Cotizaciones obligatorias para fondos de retiro y cobertura médica.</li>
+      <li><strong>Retenciones Freelance:</strong> Ajustes impositivos específicos aplicables al emitir facturas de honorarios profesionales.</li>
+    </ul>
 
-    <h2>Preguntas Frecuentes sobre Sueldo Neto y Retenciones</h2>
-    
-    <h3>1. ¿Cuál es la diferencia entre Sueldo Bruto y Sueldo Neto?</h3>
-    <p>El bruto es la cifra acordada en el contrato laboral. El neto es lo que realmente recibes para tus gastos personales tras los descuentos fiscales obligatorios.</p>
+    <h2>Preguntas Frecuentes (FAQ)</h2>
+    <h3>1. ¿Por qué el sueldo neto varía de un país a otro?</h3>
+    <p>Cada jurisdicción aplica tablas progresivas distintas y esquemas de beneficios sociales específicos para trabajadores dependientes e independientes.</p>
 
-    <h3>2. ¿Cómo afecta la retención de ISR o IRPF a los freelancers?</h3>
-    <p>Los trabajadores independientes (freelancers) deben calcular la retención de impuestos correspondiente al emitir facturas o recibos de honorarios a personas morales o empresas extranjeras.</p>
-
-    <h3>3. ¿Esta calculadora actualiza los impuestos para 2026?</h3>
-    <p>Sí, la herramienta aplica los promedios de tasas impositivas vigentes para calcular aproximaciones precisas en nóminas mensuales.</p>
+    <h3>2. ¿Cómo me ayuda este desglose a negociar mi contrato?</h3>
+    <p>Calcular el sueldo neto exacto te permite establecer tus pretensiones salariales en montos líquidos de dinero disponible, asegurando que cubras tus necesidades financieras.</p>
   </div>
 </div>
 
 <script>
-  function calculateSalary() {
-    const gross = parseFloat(document.getElementById('grossSalary').value);
-    const country = document.getElementById('country').value;
+  let chartInstance = null;
 
-    if (isNaN(gross) || gross <= 0) {
-      alert('Por favor, ingresa un monto de sueldo bruto válido.');
-      return;
-    }
+  function initChart() {
+    const ctx = document.getElementById('salaryChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Sueldo Neto', 'Impuestos', 'Seguridad Social'],
+        datasets: [{
+          data: [70, 20, 10],
+          backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        cutout: '70%'
+      }
+    });
+  }
+
+  function syncSlider(val) {
+    document.getElementById('grossSalary').value = val;
+    updateCalculation();
+  }
+
+  function updateCalculation() {
+    const gross = parseFloat(document.getElementById('grossSalary').value) || 0;
+    const allowances = parseFloat(document.getElementById('allowances').value) || 0;
+    const country = document.getElementById('country').value;
+    
+    document.getElementById('salarySlider').value = gross;
 
     let taxRate = 0.15;
     let socialRate = 0.05;
@@ -226,17 +385,30 @@
       socialRate = 0.0635;
     }
 
-    const taxAmount = gross * taxRate;
-    const socialAmount = gross * socialRate;
+    const taxableBase = Math.max(0, gross - allowances);
+    const taxAmount = taxableBase * taxRate;
+    const socialAmount = taxableBase * socialRate;
     const netSalary = gross - taxAmount - socialAmount;
 
-    document.getElementById('resGross').innerText = '$' + gross.toFixed(2);
-    document.getElementById('resTax').innerText = '-$' + taxAmount.toFixed(2);
-    document.getElementById('resSocial').innerText = '-$' + socialAmount.toFixed(2);
-    document.getElementById('resNet').innerText = '$' + netSalary.toFixed(2);
+    document.getElementById('grossDisplay').innerText = '$' + gross.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('taxDisplay').innerText = '-$' + taxAmount.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('socialDisplay').innerText = '-$' + socialAmount.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('netAmount').innerText = '$' + netSalary.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-    document.getElementById('results').style.display = 'block';
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [
+        Math.max(0, netSalary),
+        Math.max(0, taxAmount),
+        Math.max(0, socialAmount)
+      ];
+      chartInstance.update();
+    }
   }
+
+  window.onload = function() {
+    initChart();
+    updateCalculation();
+  };
 </script>
 
 </body>
