@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Calculadora de Sueldo Líquido Chile 2026 | AFP, Fonasa e Impuesto Único</title>
+  <meta name="description" content="Calcula tu sueldo líquido en Chile (CLP). Desglose de cotizaciones AFP, Fonasa/Isapre e Impuesto Único de Segunda Categoría.">
+  <meta name="keywords" content="calculadora sueldo liquido chile, calcular sueldo bruto a liquido, descuento afp fonasa, impuesto unico segunda categoria">
+  <meta name="google-site-verification" content="pl8VKu4miXjCryxIBvGF42JT68K2FOyj5GZ1E2aZHYI" />
+  <link rel="canonical" href="https://sueldopro.online/chile/">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root { --primary: #dc2626; --primary-dark: #b91c1c; --bg: #f1f5f9; --card-bg: #ffffff; --text: #0f172a; --muted: #64748b; --border: #e2e8f0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 24px 12px; }
+    .container { max-width: 960px; margin: 0 auto; }
+    .header-tag { text-align: center; margin-bottom: 24px; }
+    .header-tag h1 { font-size: 2rem; font-weight: 800; }
+    .app-layout { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 32px; }
+    @media (min-width: 768px) { .app-layout { grid-template-columns: 1fr 1fr; } }
+    .card { background: var(--card-bg); border-radius: 16px; padding: 28px; border: 1px solid var(--border); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; }
+    input, select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 1rem; }
+    .stat-main { text-align: center; padding: 20px; background: #fef2f2; border-radius: 12px; border: 1px solid #fecaca; margin-bottom: 20px; }
+    .stat-main .amount { font-size: 2.2rem; font-weight: 800; color: var(--primary-dark); }
+    .breakdown-list { list-style: none; margin-bottom: 20px; }
+    .breakdown-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+    .chart-box { max-width: 220px; margin: 10px auto; }
+    .content-card { background: var(--card-bg); border-radius: 16px; padding: 32px; border: 1px solid var(--border); }
+    .nav-home { display: inline-block; margin-bottom: 16px; color: var(--primary); text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <a href="https://sueldopro.online/" class="nav-home">← Volver a la Calculadora Global</a>
+  <div class="header-tag">
+    <h1>Calculadora de Sueldo Líquido Chile 2026 🇨🇱</h1>
+    <p>Calcula tu ingreso líquido mensual, cotizaciones previsionales de AFP y Fonasa</p>
+  </div>
+  <div class="app-layout">
+    <div class="card">
+      <div class="form-group">
+        <label for="grossSalary">Sueldo Bruto Mensual (CLP $):</label>
+        <input type="number" id="grossSalary" value="950000" step="50000" oninput="updateCalculation()">
+      </div>
+      <button style="background:var(--primary); color:white; border:none; padding:12px; border-radius:8px; font-weight:600; width:100%; cursor:pointer;" onclick="window.print()">🖨️ Imprimir Desglose CLP</button>
+    </div>
+    <div class="card">
+      <div class="stat-main">
+        <span style="font-size:0.85rem; color:var(--muted); font-weight:600; text-transform:uppercase;">Sueldo Líquido a Recibir</span>
+        <div class="amount" id="netAmount">$0 CLP</div>
+      </div>
+      <ul class="breakdown-list">
+        <li class="breakdown-item"><span>AFP (10.5% est.):</span><strong id="afpDisplay" style="color:#ef4444;">-$0 CLP</strong></li>
+        <li class="breakdown-item"><span>Salud Fonasa/Isapre (7%):</span><strong id="healthDisplay" style="color:#f59e0b;">-$0 CLP</strong></li>
+        <li class="breakdown-item"><span>Seguro Cesantía (0.6%):</span><strong id="unempDisplay" style="color:#64748b;">-$0 CLP</strong></li>
+      </ul>
+      <div class="chart-box"><canvas id="salaryChart"></canvas></div>
+    </div>
+  </div>
+  <div class="content-card">
+    <h2>¿Cómo calcular el Sueldo Líquido en Chile?</h2>
+    <p>El sueldo líquido resulta de tomar el salario bruto imponibles y descontar el 10% obligatorio de AFP (+ comisión), el 7% de salud (Fonasa o Isapre) y el 0.6% de seguro de cesantía, además del Impuesto Único si aplica.</p>
+  </div>
+</div>
+<script>
+  let chartInstance = null;
+  function initChart() {
+    const ctx = document.getElementById('salaryChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: { labels: ['Sueldo Líquido', 'AFP', 'Salud/Seguro'], datasets: [{ data: [81.9, 10.5, 7.6], backgroundColor: ['#10b981', '#ef4444', '#f59e0b'], borderWidth: 0 }] },
+      options: { responsive: true, plugins: { legend: { display: false } }, cutout: '70%' }
+    });
+  }
+  function updateCalculation() {
+    const gross = parseFloat(document.getElementById('grossSalary').value) || 0;
+    const afp = gross * 0.105;
+    const health = gross * 0.07;
+    const unemp = gross * 0.006;
+    const net = gross - afp - health - unemp;
+    document.getElementById('afpDisplay').innerText = '-$' + afp.toLocaleString('es-CL') + ' CLP';
+    document.getElementById('healthDisplay').innerText = '-$' + health.toLocaleString('es-CL') + ' CLP';
+    document.getElementById('unempDisplay').innerText = '-$' + unemp.toLocaleString('es-CL') + ' CLP';
+    document.getElementById('netAmount').innerText = '$' + net.toLocaleString('es-CL') + ' CLP';
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [Math.max(0, net), Math.max(0, afp), Math.max(0, health + unemp)];
+      chartInstance.update();
+    }
+  }
+  window.onload = function() { initChart(); updateCalculation(); };
+</script>
+</body>
+</html>
