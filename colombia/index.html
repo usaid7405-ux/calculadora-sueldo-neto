@@ -1,314 +1,74 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-CO">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Calculadora de Sueldo Neto Colombia 2026 | Salud y Pensión</title>
-  <meta name="description" content="Calcula tu salario neto real en Colombia (COP). Obtén el desglose de aportes a Salud, Pensión y Retención en la Fuente.">
+  <title>Calculadora de Sueldo Neto Colombia 2026 | Salud, Pensión y Auxilio</title>
+  <meta name="description" content="Calcula tu salario neto real en Colombia (COP) para 2026. Obtén el desglose de aportes a Salud, Pensión, Auxilio de Transporte y Retención en la Fuente.">
   <link rel="canonical" href="https://sueldopro.online/colombia/">
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <style>
-    :root {
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --accent-green: #10b981;
-      --accent-glow: rgba(16, 185, 129, 0.15);
-      --bg: #0f172a;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --input-bg: #0f172a;
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-    }
-    
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text-main);
-      line-height: 1.6;
-      padding: 32px 16px;
-    }
-
-    .container { max-width: 1020px; margin: 0 auto; }
-
-    .header-tag { text-align: center; margin-bottom: 32px; }
-    .badge {
-      display: inline-block;
-      background: rgba(59, 130, 246, 0.15);
-      color: #60a5fa;
-      border: 1px solid rgba(96, 165, 250, 0.3);
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 14px;
-      border-radius: 20px;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .header-tag h1 { font-size: 2.25rem; font-weight: 800; color: #ffffff; letter-spacing: -0.025em; }
-    .header-tag p { color: var(--text-muted); font-size: 1.05rem; margin-top: 6px; }
-
-    .country-nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
-    .country-pill {
-      background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 16px;
-      border-radius: 24px; text-decoration: none; color: var(--text-main); font-weight: 600;
-      font-size: 0.875rem; transition: all 0.2s ease;
-    }
-    .country-pill:hover, .country-pill.active {
-      border-color: var(--primary); color: #60a5fa; transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    }
-
-    .app-layout { display: grid; grid-template-columns: 1fr; gap: 28px; margin-bottom: 40px; }
-    @media (min-width: 820px) { .app-layout { grid-template-columns: 1fr 1fr; } }
-
-    .card {
-      background: var(--card-bg); border-radius: 20px; padding: 32px;
-      box-shadow: var(--shadow-lg); border: 1px solid var(--card-border);
-    }
-
-    .form-group { margin-bottom: 22px; }
-    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.925rem; color: #cbd5e1; }
-
-    input, select {
-      width: 100%; padding: 13px 16px; border: 1.5px solid var(--card-border);
-      border-radius: 12px; font-size: 1.05rem; color: #ffffff; background-color: var(--input-bg);
-      transition: all 0.2s;
-    }
-
-    input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25); }
-
-    .slider-container { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
-    .slider-container input[type="range"] { flex: 1; accent-color: var(--primary); cursor: pointer; }
-
-    .results-display { display: flex; flex-direction: column; height: 100%; justify-content: space-between; }
-
-    .stat-main {
-      text-align: center; padding: 24px; background: var(--accent-glow);
-      border-radius: 16px; border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 24px;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
-    }
-    .stat-main .amount { font-size: 2.5rem; font-weight: 800; color: var(--accent-green); letter-spacing: -0.03em; }
-    .stat-main .label { font-size: 0.825rem; color: #34d399; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
-
-    .breakdown-list { list-style: none; margin-bottom: 24px; }
-    .breakdown-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--card-border); font-size: 0.975rem; }
-    .breakdown-item strong { color: #ffffff; font-weight: 700; }
-
-    .chart-box { max-width: 210px; margin: 12px auto 0 auto; }
-
-    .btn-action {
-      background: var(--primary); color: white; border: none; padding: 14px;
-      border-radius: 12px; font-weight: 700; font-size: 0.975rem; cursor: pointer;
-      width: 100%; margin-top: 12px; transition: all 0.2s; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-    }
-    .btn-action:hover { background: var(--primary-hover); transform: translateY(-1px); }
-
-    .btn-secondary {
-      background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 12px;
-      border-radius: 12px; font-weight: 600; font-size: 0.925rem; cursor: pointer;
-      width: 100%; margin-top: 10px; transition: all 0.2s;
-    }
-    .btn-secondary:hover { background: #475569; }
-
-    .content-card { background: var(--card-bg); border-radius: 20px; padding: 36px; border: 1px solid var(--card-border); }
-    .content-card h2 { font-size: 1.5rem; margin-bottom: 14px; color: #ffffff; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
-    .content-card h3 { font-size: 1.15rem; margin: 20px 0 10px 0; color: #cbd5e1; }
-    .content-card p, .content-card li { color: var(--text-muted); font-size: 0.975rem; }
-    .content-card ul { margin-left: 20px; margin-bottom: 20px; }
-
-    footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--card-border); text-align: center; font-size: 0.875rem; color: var(--text-muted); }
-    footer a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
-    footer a:hover { color: #60a5fa; }
-  </style>
+  <link rel="stylesheet" href="../style.css">
 </head>
-<body>
-
-<div class="container">
-  <div class="header-tag">
-    <span class="badge">Colombia 2026</span>
-    <h1>Calculadora de Sueldo Neto Colombia</h1>
-    <p>Calcula tu salario neto libre en COP tras deducciones de Salud (4%) y Pensión (4%)</p>
-  </div>
-
-  <div class="country-nav">
-    <a href="https://sueldopro.online/" class="country-pill">🌎 Inicio</a>
-    <a href="https://sueldopro.online/mexico/" class="country-pill">🇲🇽 México</a>
-    <a href="https://sueldopro.online/espana/" class="country-pill">🇪🇸 España</a>
-    <a href="https://sueldopro.online/colombia/" class="country-pill active">🇨🇴 Colombia</a>
-    <a href="https://sueldopro.online/argentina/" class="country-pill">🇦🇷 Argentina</a>
-    <a href="https://sueldopro.online/chile/" class="country-pill">🇨🇱 Chile</a>
-    <a href="https://sueldopro.online/peru/" class="country-pill">🇵🇪 Perú</a>
-  </div>
-
-  <div class="app-layout">
-    <div class="card">
-      <div class="form-group">
-        <label for="periodToggle">Periodo de Cálculo:</label>
-        <select id="periodToggle" onchange="updateCalculation()">
-          <option value="monthly">Mensual</option>
-          <option value="annual">Anual (x12)</option>
-        </select>
+<body class="dark-theme">
+  <header>
+    <nav class="nav-container">
+      <a href="../" class="logo">SueldoPro</a>
+      <div class="nav-links">
+        <a href="../mexico/">México</a>
+        <a href="../espana/">España</a>
+        <a href="../colombia/" class="active">Colombia</a>
+        <a href="../argentina/">Argentina</a>
+        <a href="../chile/">Chile</a>
+        <a href="../peru/">Perú</a>
       </div>
+    </nav>
+  </header>
 
-      <div class="form-group">
-        <label for="grossSalary" id="grossLabel">Sueldo Bruto Mensual ($ COP):</label>
-        <input type="number" id="grossSalary" value="3500000" min="0" step="any" oninput="updateCalculation()">
-        <div class="slider-container">
-          <input type="range" id="salarySlider" min="0" max="20000000" step="50000" value="3500000" oninput="syncSlider(this.value)">
+  <main class="container">
+    <h1>Calculadora de Sueldo Neto Colombia 2026</h1>
+    <p class="subtitle">Calcula tu liquidación mensual considerando aportes de ley y subsidios aplicables.</p>
+
+    <!-- Interactive Calculator Container -->
+    <div class="calculator-card">
+      <form id="calc-form">
+        <div class="form-group">
+          <label for="salary">Salario Bruto Mensual (COP):</label>
+          <input type="number" id="salary" placeholder="Ej. 2000000" required step="any">
         </div>
-      </div>
+        <button type="submit" class="btn-primary">Calcular Sueldo Neto</button>
+      </form>
 
-      <div class="form-group">
-        <label for="allowances">Deducciones Personales ($ COP):</label>
-        <input type="number" id="allowances" value="0" min="0" step="any" oninput="updateCalculation()">
+      <div id="results" class="results-card" style="display:none;">
+        <h3>Desglose de Nómina</h3>
+        <p>Salario Bruto: <span id="res-bruto">$0</span></p>
+        <p>Aporte Salud (4%): <span id="res-salud">-$0</span></p>
+        <p>Aporte Pensión (4%): <span id="res-pension">-$0</span></p>
+        <p>Auxilio de Transporte: <span id="res-transporte">+$0</span></p>
+        <hr>
+        <h4>Sueldo Neto Mensual: <span id="res-neto">$0</span></h4>
       </div>
-      
-      <button class="btn-action" onclick="copySummary()" id="copyBtn">📋 Copiar Resumen de Sueldo</button>
-      <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
     </div>
 
-    <div class="card">
-      <div class="results-display">
-        <div class="stat-main">
-          <span class="label" id="netLabel">Sueldo Neto en Mano (Mensual)</span>
-          <div class="amount" id="netAmount">$0.00</div>
-        </div>
-
-        <ul class="breakdown-list">
-          <li class="breakdown-item">
-            <span>Sueldo Bruto Base:</span>
-            <strong id="grossDisplay">$0.00</strong>
-          </li>
-          <li class="breakdown-item">
-            <span>Salud Obligatoria (4%):</span>
-            <strong id="taxDisplay" style="color: #f87171;">-$0.00</strong>
-          </li>
-          <li class="breakdown-item">
-            <span>Pensión Obligatoria (4%):</span>
-            <strong id="socialDisplay" style="color: #fbbf24;">-$0.00</strong>
-          </li>
-        </ul>
-
-        <div class="chart-box">
-          <canvas id="salaryChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="content-card">
-    <h2>¿Cómo se calcula el sueldo neto en Colombia para 2026?</h2>
-    <p>El cálculo del salario líquido para empleados dependientes en Colombia aplica deducciones de ley para el fondo de salud (4%) y pensión (4%).</p>
-  </div>
+    <!-- SEO & Keyword Optimization Section -->
+    <section class="seo-content" style="max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6;">
+      <h2>Deducciones de Ley en Colombia (2026)</h2>
+      <p>Al calcular tu salario líquido en Colombia, se aplican automáticamente los siguientes conceptos obligatorios de nómina:</p>
+      <ul>
+        <li><strong>Aporte a Salud (4%):</strong> Descuento obligatorio destinado a tu EPS.</li>
+        <li><strong>Aporte a Pensión (4%):</strong> Cotización a tu fondo de pensiones (Colpensiones o fondo privado).</li>
+        <li><strong>Auxilio de Transporte:</strong> Subsidio en efectivo otorgado a trabajadores que devenguen hasta dos Salarios Mínimos Mensuales Legales Vigentes (SMMLV).</li>
+        <li><strong>Fondo de Solidaridad Pensional (FSP):</strong> Descuento progresivo aplicable únicamente a salarios iguales o superiores a 4 SMMLV.</li>
+      </ul>
+    </section>
+  </main>
 
   <footer>
-    <p>© 2026 SueldoPro. Todos los derechos reservados.</p>
-    <div style="margin-top: 10px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-      <a href="https://sueldopro.online/about.html">Sobre Nosotros</a>
-      <a href="https://sueldopro.online/contact.html">Contacto</a>
-      <a href="https://sueldopro.online/privacy.html">Política de Privacidad</a>
-      <a href="https://sueldopro.online/terms.html">Términos de Servicio</a>
+    <div class="footer-links">
+      <a href="../about.html">Sobre Nosotros</a> | 
+      <a href="../contact.html">Contacto</a> | 
+      <a href="../privacy.html">Política de Privacidad</a> | 
+      <a href="../terms.html">Términos de Servicio</a>
     </div>
+    <p>&copy; 2026 SueldoPro. Todos los derechos reservados.</p>
   </footer>
-</div>
-
-<script>
-  let chartInstance = null;
-
-  function initChart() {
-    const ctx = document.getElementById('salaryChart').getContext('2d');
-    chartInstance = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Sueldo Neto', 'Salud', 'Pensión'],
-        datasets: [{
-          data: [92, 4, 4],
-          backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        cutout: '72%'
-      }
-    });
-  }
-
-  function syncSlider(val) {
-    document.getElementById('grossSalary').value = val;
-    updateCalculation();
-  }
-
-  function updateCalculation() {
-    const gross = parseFloat(document.getElementById('grossSalary').value) || 0;
-    const allowances = parseFloat(document.getElementById('allowances').value) || 0;
-    const period = document.getElementById('periodToggle').value;
-    
-    document.getElementById('salarySlider').value = gross;
-
-    const healthRate = 0.04;
-    const pensionRate = 0.04;
-
-    const multiplier = period === 'annual' ? 12 : 1;
-    document.getElementById('grossLabel').innerText = `Sueldo Bruto ${period === 'annual' ? 'Anual' : 'Mensual'} ($ COP):`;
-    document.getElementById('netLabel').innerText = `Sueldo Neto en Mano (${period === 'annual' ? 'Anual' : 'Mensual'})`;
-
-    const calcGross = gross * multiplier;
-    const taxableBase = Math.max(0, calcGross - allowances);
-    const healthAmount = taxableBase * healthRate;
-    const pensionAmount = taxableBase * pensionRate;
-    const netSalary = calcGross - healthAmount - pensionAmount;
-
-    document.getElementById('grossDisplay').innerText = '$' + calcGross.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' COP';
-    document.getElementById('taxDisplay').innerText = '-$' + healthAmount.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' COP';
-    document.getElementById('socialDisplay').innerText = '-$' + pensionAmount.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' COP';
-    document.getElementById('netAmount').innerText = '$' + netSalary.toLocaleString('es-CO', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' COP';
-
-    if (chartInstance) {
-      chartInstance.data.datasets[0].data = [
-        Math.max(0, netSalary),
-        Math.max(0, healthAmount),
-        Math.max(0, pensionAmount)
-      ];
-      chartInstance.update();
-    }
-  }
-
-  function copySummary() {
-    const gross = document.getElementById('grossDisplay').innerText;
-    const tax = document.getElementById('taxDisplay').innerText;
-    const social = document.getElementById('socialDisplay').innerText;
-    const net = document.getElementById('netAmount').innerText;
-    const period = document.getElementById('periodToggle').value === 'annual' ? 'Anual' : 'Mensual';
-
-    const text = `📊 Resumen de Sueldo Colombia (${period}) - SueldoPro.online\n` +
-                 `• Sueldo Bruto: ${gross}\n` +
-                 `• Salud: ${tax}\n` +
-                 `• Pensión: ${social}\n` +
-                 `---------------------------\n` +
-                 `• Sueldo Neto: ${net}\n\n` +
-                 `Calculado en https://sueldopro.online/colombia/`;
-
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copyBtn');
-      btn.innerText = '✅ ¡Copiado al Portapapeles!';
-      setTimeout(() => { btn.innerText = '📋 Copiar Resumen de Sueldo'; }, 2500);
-    });
-  }
-
-  window.onload = function() {
-    initChart();
-    updateCalculation();
-  };
-</script>
-
 </body>
 </html>
