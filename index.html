@@ -57,84 +57,133 @@
     :root {
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
-      --accent: #10b981;
-      --bg: #f1f5f9;
+      --primary-light: #eff6ff;
+      --accent-green: #059669;
+      --bg: #f8fafc;
       --card-bg: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
       --border: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg);
-      color: var(--text);
+      color: var(--text-main);
       line-height: 1.6;
-      padding: 24px 12px;
+      padding: 32px 16px;
     }
 
-    .container { max-width: 960px; margin: 0 auto; }
+    .container { max-width: 1020px; margin: 0 auto; }
 
-    .header-tag { text-align: center; margin-bottom: 24px; }
-    .header-tag h1 { font-size: 2rem; font-weight: 800; color: var(--text); }
-    .header-tag p { color: var(--muted); font-size: 1rem; }
+    .header-tag { text-align: center; margin-bottom: 32px; }
+    .badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .header-tag h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.025em;
+    }
+    .header-tag p { color: var(--text-muted); font-size: 1.05rem; margin-top: 6px; }
 
+    /* Country Pills Navbar */
+    .country-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .country-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 24px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+    .country-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+    }
+
+    /* Main App Layout Grid */
     .app-layout {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 24px;
-      margin-bottom: 32px;
+      gap: 28px;
+      margin-bottom: 40px;
     }
-
-    @media (min-width: 768px) {
+    @media (min-width: 820px) {
       .app-layout { grid-template-columns: 1fr 1fr; }
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 16px;
-      padding: 28px;
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
       border: 1px solid var(--border);
     }
 
-    .form-group { margin-bottom: 20px; }
+    .form-group { margin-bottom: 22px; }
 
     label {
       display: block;
       font-weight: 600;
       margin-bottom: 8px;
-      font-size: 0.9rem;
+      font-size: 0.925rem;
       color: #334155;
     }
 
     input, select {
       width: 100%;
-      padding: 12px 14px;
+      padding: 13px 16px;
       border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-size: 1rem;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      background-color: #ffffff;
       transition: all 0.2s;
     }
 
     input:focus, select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
     }
 
     .slider-container {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-top: 8px;
+      margin-top: 10px;
     }
-
     .slider-container input[type="range"] {
       flex: 1;
       accent-color: var(--primary);
+      cursor: pointer;
     }
 
     .results-display {
@@ -146,97 +195,120 @@
 
     .stat-main {
       text-align: center;
-      padding: 20px;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 20px;
+      padding: 24px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-radius: 16px;
+      border: 1px solid #bbf7d0;
+      margin-bottom: 24px;
+    }
+    .stat-main .amount {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent-green);
+      letter-spacing: -0.03em;
+    }
+    .stat-main .label {
+      font-size: 0.825rem;
+      color: #166534;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
     }
 
-    .stat-main .amount { font-size: 2.2rem; font-weight: 800; color: var(--accent); }
-    .stat-main .label { font-size: 0.85rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-
-    .breakdown-list { list-style: none; margin-bottom: 20px; }
-
+    .breakdown-list { list-style: none; margin-bottom: 24px; }
     .breakdown-item {
       display: flex;
       justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px dashed var(--border);
-      font-size: 0.95rem;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.975rem;
     }
+    .breakdown-item strong { color: var(--text-main); font-weight: 700; }
 
-    .breakdown-item strong { color: #334155; }
-
-    .chart-box { max-width: 220px; margin: 10px auto; }
-
-    .content-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 32px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
-    }
-
-    .content-card h2 {
-      font-size: 1.4rem;
-      margin-bottom: 12px;
-      color: #0f172a;
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 6px;
-    }
-
-    .content-card h3 { font-size: 1.1rem; margin: 18px 0 8px 0; color: #1e293b; }
-    .content-card p, .content-card li { color: #475569; font-size: 0.95rem; }
-    .content-card ul { margin-left: 20px; margin-bottom: 16px; }
+    .chart-box { max-width: 210px; margin: 12px auto 0 auto; }
 
     .btn-action {
       background: var(--primary);
       color: white;
       border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.975rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 12px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+    .btn-action:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid var(--border);
       padding: 12px;
-      border-radius: 8px;
+      border-radius: 12px;
       font-weight: 600;
+      font-size: 0.925rem;
       cursor: pointer;
       width: 100%;
       margin-top: 10px;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
+    .btn-secondary:hover { background: #e2e8f0; }
 
-    .btn-action:hover { background: var(--primary-dark); }
-
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #1e293b;
-      border: none;
-      padding: 10px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 8px;
-      transition: background 0.2s;
+    /* SEO Article Container */
+    .content-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 36px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
     }
+    .content-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 14px;
+      color: var(--text-main);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 8px;
+    }
+    .content-card h3 { font-size: 1.15rem; margin: 20px 0 10px 0; color: #1e293b; }
+    .content-card p, .content-card li { color: #475569; font-size: 0.975rem; }
+    .content-card ul { margin-left: 20px; margin-bottom: 20px; }
 
-    .btn-secondary:hover { background: #cbd5e1; }
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    footer a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    footer a:hover { color: var(--primary); }
   </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header-tag">
-    <h1>Calculadora de Sueldo Neto 2026 Pro</h1>
-    <p>Calcula tu salario líquido real y desglose de impuestos al instante</p>
+    <span class="badge">Actualizado 2026</span>
+    <h1>Calculadora de Sueldo Neto Pro</h1>
+    <p>Calcula tu salario líquido exacto, retenciones de impuestos y deducciones de ley</p>
   </div>
 
-  <!-- REGIONAL CALCULATORS NAV BAR -->
-  <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;">
-    <a href="https://sueldopro.online/mexico/" style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; text-decoration: none; color: #0f172a; font-weight: 600; font-size: 0.85rem;">🇲🇽 México</a>
-    <a href="https://sueldopro.online/espana/" style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; text-decoration: none; color: #0f172a; font-weight: 600; font-size: 0.85rem;">🇪🇸 España</a>
-    <a href="https://sueldopro.online/colombia/" style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; text-decoration: none; color: #0f172a; font-weight: 600; font-size: 0.85rem;">🇨🇴 Colombia</a>
-    <a href="https://sueldopro.online/argentina/" style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; text-decoration: none; color: #0f172a; font-weight: 600; font-size: 0.85rem;">🇦🇷 Argentina</a>
-    <a href="https://sueldopro.online/chile/" style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; text-decoration: none; color: #0f172a; font-weight: 600; font-size: 0.85rem;">🇨🇱 Chile</a>
-    <a href="https://sueldopro.online/peru/" style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; text-decoration: none; color: #0f172a; font-weight: 600; font-size: 0.85rem;">🇵🇪 Perú</a>
+  <!-- REGIONAL CALCULATORS NAVBAR -->
+  <div class="country-nav">
+    <a href="https://sueldopro.online/mexico/" class="country-pill">🇲🇽 México</a>
+    <a href="https://sueldopro.online/espana/" class="country-pill">🇪🇸 España</a>
+    <a href="https://sueldopro.online/colombia/" class="country-pill">🇨🇴 Colombia</a>
+    <a href="https://sueldopro.online/argentina/" class="country-pill">🇦🇷 Argentina</a>
+    <a href="https://sueldopro.online/chile/" class="country-pill">🇨🇱 Chile</a>
+    <a href="https://sueldopro.online/peru/" class="country-pill">🇵🇪 Perú</a>
   </div>
 
   <div class="app-layout">
@@ -262,15 +334,16 @@
 
       <div class="form-group">
         <label for="grossSalary" id="grossLabel">Sueldo Bruto Mensual ($):</label>
-        <input type="number" id="grossSalary" value="2500" min="0" oninput="updateCalculation()">
+        <!-- step="any" and min="0" allow entering exact amounts like 505, 555, 12.50 without restrictions -->
+        <input type="number" id="grossSalary" value="2550" min="0" step="any" oninput="updateCalculation()">
         <div class="slider-container">
-          <input type="range" id="salarySlider" min="500" max="10000" step="100" value="2500" oninput="syncSlider(this.value)">
+          <input type="range" id="salarySlider" min="0" max="10000" step="1" value="2550" oninput="syncSlider(this.value)">
         </div>
       </div>
 
       <div class="form-group">
         <label for="allowances">Deducciones Personales / Ajustes ($):</label>
-        <input type="number" id="allowances" value="0" min="0" oninput="updateCalculation()">
+        <input type="number" id="allowances" value="0" min="0" step="any" oninput="updateCalculation()">
       </div>
       
       <button class="btn-action" onclick="copySummary()" id="copyBtn">📋 Copiar Resumen de Sueldo</button>
@@ -292,11 +365,11 @@
           </li>
           <li class="breakdown-item">
             <span>Impuestos (ISR / IRPF):</span>
-            <strong id="taxDisplay" style="color: #ef4444;">-$0.00</strong>
+            <strong id="taxDisplay" style="color: #dc2626;">-$0.00</strong>
           </li>
           <li class="breakdown-item">
             <span>Seguridad Social / Pensiones:</span>
-            <strong id="socialDisplay" style="color: #f59e0b;">-$0.00</strong>
+            <strong id="socialDisplay" style="color: #d97706;">-$0.00</strong>
           </li>
         </ul>
 
@@ -329,13 +402,13 @@
   </div>
 
   <!-- FOOTER LEGAL & CONTACT LINKS -->
-  <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 0.85rem; color: #64748b;">
+  <footer>
     <p>© 2026 SueldoPro. Todos los derechos reservados.</p>
-    <div style="margin-top: 8px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
-      <a href="https://sueldopro.online/about.html" style="color: #64748b; text-decoration: none;">Sobre Nosotros</a>
-      <a href="https://sueldopro.online/contact.html" style="color: #64748b; text-decoration: none;">Contacto</a>
-      <a href="https://sueldopro.online/privacy.html" style="color: #64748b; text-decoration: none;">Política de Privacidad</a>
-      <a href="https://sueldopro.online/terms.html" style="color: #64748b; text-decoration: none;">Términos de Servicio</a>
+    <div style="margin-top: 10px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <a href="https://sueldopro.online/about.html">Sobre Nosotros</a>
+      <a href="https://sueldopro.online/contact.html">Contacto</a>
+      <a href="https://sueldopro.online/privacy.html">Política de Privacidad</a>
+      <a href="https://sueldopro.online/terms.html">Términos de Servicio</a>
     </div>
   </footer>
 </div>
@@ -351,14 +424,14 @@
         labels: ['Sueldo Neto', 'Impuestos', 'Seguridad Social'],
         datasets: [{
           data: [70, 20, 10],
-          backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+          backgroundColor: ['#059669', '#dc2626', '#d97706'],
           borderWidth: 0
         }]
       },
       options: {
         responsive: true,
         plugins: { legend: { display: false } },
-        cutout: '70%'
+        cutout: '72%'
       }
     });
   }
@@ -400,10 +473,10 @@
     const socialAmount = taxableBase * socialRate;
     const netSalary = calcGross - taxAmount - socialAmount;
 
-    document.getElementById('grossDisplay').innerText = '$' + calcGross.toLocaleString('en-US', {minimumFractionDigits: 2});
-    document.getElementById('taxDisplay').innerText = '-$' + taxAmount.toLocaleString('en-US', {minimumFractionDigits: 2});
-    document.getElementById('socialDisplay').innerText = '-$' + socialAmount.toLocaleString('en-US', {minimumFractionDigits: 2});
-    document.getElementById('netAmount').innerText = '$' + netSalary.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('grossDisplay').innerText = '$' + calcGross.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('taxDisplay').innerText = '-$' + taxAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('socialDisplay').innerText = '-$' + socialAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('netAmount').innerText = '$' + netSalary.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
     if (chartInstance) {
       chartInstance.data.datasets[0].data = [
