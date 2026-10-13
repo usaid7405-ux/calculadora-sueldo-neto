@@ -1,104 +1,320 @@
 <!DOCTYPE html>
-<html lang="es-MX">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>Calculadora de Sueldo Neto México 2026 | Retención ISR e IMSS</title>
-  <meta name="description" content="Calcula tu salario neto en México (MXN) para 2026. Obtén el desglose exacto de retenciones de ISR, cuotas del IMSS y sueldo líquido real.">
+  <meta name="description" content="Calcula tu salario neto real en México (MXN). Obtén el desglose de retenciones de ISR, cuotas del IMSS y sueldo bruto a líquido para empleados y RESICO.">
   <link rel="canonical" href="https://sueldopro.online/mexico/">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <!-- Direct Full HTTPS URL to guarantee CSS loading -->
-  <link rel="stylesheet" href="https://sueldopro.online/style.css?v=100">
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Calculadora de Sueldo Neto México 2026",
-    "url": "https://sueldopro.online/mexico/",
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "All",
-    "browserRequirements": "Requires JavaScript and HTML5 support",
-    "isAccessibleForFree": true,
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "MXN"
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent-green: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.15);
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: #0f172a;
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
     }
-  }
-  </script>
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 32px 16px;
+    }
+
+    .container { max-width: 1020px; margin: 0 auto; }
+
+    .header-tag { text-align: center; margin-bottom: 32px; }
+    .badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .header-tag h1 { font-size: 2.25rem; font-weight: 800; color: #ffffff; letter-spacing: -0.025em; }
+    .header-tag p { color: var(--text-muted); font-size: 1.05rem; margin-top: 6px; }
+
+    .country-nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+    .country-pill {
+      background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 16px;
+      border-radius: 24px; text-decoration: none; color: var(--text-main); font-weight: 600;
+      font-size: 0.875rem; transition: all 0.2s ease;
+    }
+    .country-pill:hover, .country-pill.active {
+      border-color: var(--primary); color: #60a5fa; transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .app-layout { display: grid; grid-template-columns: 1fr; gap: 28px; margin-bottom: 40px; }
+    @media (min-width: 820px) { .app-layout { grid-template-columns: 1fr 1fr; } }
+
+    .card {
+      background: var(--card-bg); border-radius: 20px; padding: 32px;
+      box-shadow: var(--shadow-lg); border: 1px solid var(--card-border);
+    }
+
+    .form-group { margin-bottom: 22px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.925rem; color: #cbd5e1; }
+
+    input, select {
+      width: 100%; padding: 13px 16px; border: 1.5px solid var(--card-border);
+      border-radius: 12px; font-size: 1.05rem; color: #ffffff; background-color: var(--input-bg);
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25); }
+
+    .slider-container { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+    .slider-container input[type="range"] { flex: 1; accent-color: var(--primary); cursor: pointer; }
+
+    .results-display { display: flex; flex-direction: column; height: 100%; justify-content: space-between; }
+
+    .stat-main {
+      text-align: center; padding: 24px; background: var(--accent-glow);
+      border-radius: 16px; border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 24px;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+    }
+    .stat-main .amount { font-size: 2.5rem; font-weight: 800; color: var(--accent-green); letter-spacing: -0.03em; }
+    .stat-main .label { font-size: 0.825rem; color: #34d399; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+
+    .breakdown-list { list-style: none; margin-bottom: 24px; }
+    .breakdown-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--card-border); font-size: 0.975rem; }
+    .breakdown-item strong { color: #ffffff; font-weight: 700; }
+
+    .chart-box { max-width: 210px; margin: 12px auto 0 auto; }
+
+    .btn-action {
+      background: var(--primary); color: white; border: none; padding: 14px;
+      border-radius: 12px; font-weight: 700; font-size: 0.975rem; cursor: pointer;
+      width: 100%; margin-top: 12px; transition: all 0.2s; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+    .btn-action:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 12px;
+      border-radius: 12px; font-weight: 600; font-size: 0.925rem; cursor: pointer;
+      width: 100%; margin-top: 10px; transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: #475569; }
+
+    .content-card { background: var(--card-bg); border-radius: 20px; padding: 36px; border: 1px solid var(--card-border); }
+    .content-card h2 { font-size: 1.5rem; margin-bottom: 14px; color: #ffffff; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+    .content-card h3 { font-size: 1.15rem; margin: 20px 0 10px 0; color: #cbd5e1; }
+    .content-card p, .content-card li { color: var(--text-muted); font-size: 0.975rem; }
+    .content-card ul { margin-left: 20px; margin-bottom: 20px; }
+
+    footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--card-border); text-align: center; font-size: 0.875rem; color: var(--text-muted); }
+    footer a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    footer a:hover { color: #60a5fa; }
+  </style>
 </head>
-<body class="dark-theme">
-  <header>
-    <nav class="nav-container">
-      <a href="https://sueldopro.online/" class="logo">SueldoPro</a>
-      <div class="nav-links">
-        <a href="https://sueldopro.online/mexico/" class="active">México</a>
-        <a href="https://sueldopro.online/espana/">España</a>
-        <a href="https://sueldopro.online/colombia/">Colombia</a>
-        <a href="https://sueldopro.online/argentina/">Argentina</a>
-        <a href="https://sueldopro.online/chile/">Chile</a>
-        <a href="https://sueldopro.online/peru/">Perú</a>
+<body>
+
+<div class="container">
+  <div class="header-tag">
+    <span class="badge">México 2026</span>
+    <h1>Calculadora de Sueldo Neto México</h1>
+    <p>Calcula tu salario libre mensual en MXN tras deducciones de ISR y cuotas IMSS</p>
+  </div>
+
+  <div class="country-nav">
+    <a href="https://sueldopro.online/" class="country-pill">🌎 Inicio</a>
+    <a href="https://sueldopro.online/mexico/" class="country-pill active">🇲🇽 México</a>
+    <a href="https://sueldopro.online/espana/" class="country-pill">🇪🇸 España</a>
+    <a href="https://sueldopro.online/colombia/" class="country-pill">🇨🇴 Colombia</a>
+    <a href="https://sueldopro.online/argentina/" class="country-pill">🇦🇷 Argentina</a>
+    <a href="https://sueldopro.online/chile/" class="country-pill">🇨🇱 Chile</a>
+    <a href="https://sueldopro.online/peru/" class="country-pill">🇵🇪 Perú</a>
+  </div>
+
+  <div class="app-layout">
+    <div class="card">
+      <div class="form-group">
+        <label for="periodToggle">Periodo de Cálculo:</label>
+        <select id="periodToggle" onchange="updateCalculation()">
+          <option value="monthly">Mensual</option>
+          <option value="annual">Anual (x12)</option>
+        </select>
       </div>
-    </nav>
-  </header>
 
-  <main class="container">
-    <h1>Calculadora de Sueldo Neto México 2026</h1>
-    <p class="subtitle">Calcula tu salario líquido real considerando retenciones de ISR y cuotas obreras del IMSS.</p>
-
-    <div class="calculator-card">
-      <form id="calc-form">
-        <div class="form-group">
-          <label for="salary">Sueldo Bruto Mensual (MXN):</label>
-          <input type="number" id="salary" placeholder="Ej. 15000" required step="any">
+      <div class="form-group">
+        <label for="grossSalary" id="grossLabel">Sueldo Bruto Mensual ($ MXN):</label>
+        <input type="number" id="grossSalary" value="18000" min="0" step="any" oninput="updateCalculation()">
+        <div class="slider-container">
+          <input type="range" id="salarySlider" min="0" max="100000" step="1" value="18000" oninput="syncSlider(this.value)">
         </div>
-        <button type="submit" class="btn-primary">Calcular Sueldo Neto</button>
-      </form>
-
-      <div id="results" class="results-card" style="display:none;">
-        <h3>Desglose de Salario</h3>
-        <p>Sueldo Bruto: <span id="res-bruto">$0.00</span></p>
-        <p>Retención ISR: <span id="res-isr">-$0.00</span></p>
-        <p>Cuotas IMSS: <span id="res-imss">-$0.00</span></p>
-        <hr>
-        <h4>Sueldo Neto Mensual: <span id="res-neto">$0.00</span></h4>
       </div>
+
+      <div class="form-group">
+        <label for="allowances">Deducciones Personales ($ MXN):</label>
+        <input type="number" id="allowances" value="0" min="0" step="any" oninput="updateCalculation()">
+      </div>
+      
+      <button class="btn-action" onclick="copySummary()" id="copyBtn">📋 Copiar Resumen de Sueldo</button>
+      <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
     </div>
 
-    <section class="seo-content" style="max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6;">
-      <h2>Cálculo de Sueldo Neto en México: ISR e IMSS 2026</h2>
-      <p>Al calcular tu salario líquido a partir del sueldo bruto en México, la herramienta aplica automáticamente las deducciones estipuladas por el SAT y la Ley Federal del Trabajo:</p>
-      <ul>
-        <li><strong>Impuesto Sobre la Renta (ISR):</strong> Cálculo aplicado según las tablas del SAT, restando el límite inferior, aplicando la tasa sobre el excedente y sumando la cuota fija.</li>
-        <li><strong>Cuotas Obrero-Patronales IMSS:</strong> Deducción directa por concepto de seguros de enfermedad, maternidad, invalidez, vida y retiro.</li>
-        <li><strong>Exención por Salario Mínimo:</strong> Conforme al artículo 36 de la Ley del Seguro Social, los trabajadores que perciben el Salario Mínimo General están exentos de la retención del IMSS.</li>
-      </ul>
-    </section>
-  </main>
+    <div class="card">
+      <div class="results-display">
+        <div class="stat-main">
+          <span class="label" id="netLabel">Sueldo Neto en Mano (Mensual)</span>
+          <div class="amount" id="netAmount">$0.00</div>
+        </div>
+
+        <ul class="breakdown-list">
+          <li class="breakdown-item">
+            <span>Sueldo Bruto Base:</span>
+            <strong id="grossDisplay">$0.00</strong>
+          </li>
+          <li class="breakdown-item">
+            <span>Retención ISR Estimada:</span>
+            <strong id="taxDisplay" style="color: #f87171;">-$0.00</strong>
+          </li>
+          <li class="breakdown-item">
+            <span>Cuota Obrera IMSS:</span>
+            <strong id="socialDisplay" style="color: #fbbf24;">-$0.00</strong>
+          </li>
+        </ul>
+
+        <div class="chart-box">
+          <canvas id="salaryChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <h2>¿Cómo se calcula el sueldo neto en México para 2026?</h2>
+    <p>El cálculo del salario neto en México implica aplicar la tabla progresiva del <strong>Impuesto sobre la Renta (ISR)</strong> emitida por el SAT y descontar las cuotas correspondientes a la seguridad social (IMSS).</p>
+
+    <h3>Deducciones obligatorias en la nómina mexicana:</h3>
+    <ul>
+      <li><strong>ISR (SAT):</strong> Tarifa progresiva que varía desde el 1.92% hasta el 35% dependiendo del nivel de ingreso acumulable.</li>
+      <li><strong>IMSS (Seguridad Social):</strong> Descuento para prestaciones de enfermedad, maternidad, invalidez y retiro.</li>
+    </ul>
+  </div>
 
   <footer>
-    <div class="regional-matrix" style="margin-bottom: 15px; font-size: 0.9em;">
-      <strong>Calculadoras Regionales:</strong> 
-      <a href="https://sueldopro.online/mexico/">Calculadora México (ISR/IMSS)</a> | 
-      <a href="https://sueldopro.online/espana/">Calculadora España (IRPF)</a> | 
-      <a href="https://sueldopro.online/colombia/">Calculadora Colombia (EPS/Pensión)</a> | 
-      <a href="https://sueldopro.online/argentina/">Calculadora Argentina (Ganancias)</a> | 
-      <a href="https://sueldopro.online/chile/">Calculadora Chile (AFP/Fonasa)</a> | 
-      <a href="https://sueldopro.online/peru/">Calculadora Perú (ONP/5ta)</a>
-    </div>
-    <div class="footer-links">
-      <a href="https://sueldopro.online/about.html">Sobre Nosotros</a> | 
-      <a href="https://sueldopro.online/contact.html">Contacto</a> | 
-      <a href="https://sueldopro.online/privacy.html">Política de Privacidad</a> | 
+    <p>© 2026 SueldoPro. Todos los derechos reservados.</p>
+    <div style="margin-top: 10px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <a href="https://sueldopro.online/about.html">Sobre Nosotros</a>
+      <a href="https://sueldopro.online/contact.html">Contacto</a>
+      <a href="https://sueldopro.online/privacy.html">Política de Privacidad</a>
       <a href="https://sueldopro.online/terms.html">Términos de Servicio</a>
     </div>
-    <p>&copy; 2026 SueldoPro. Todos los derechos reservados.</p>
   </footer>
+</div>
 
-  <script src="https://sueldopro.online/script.js?v=100"></script>
+<script>
+  let chartInstance = null;
+
+  function initChart() {
+    const ctx = document.getElementById('salaryChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Sueldo Neto', 'ISR', 'IMSS'],
+        datasets: [{
+          data: [70, 20, 10],
+          backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        cutout: '72%'
+      }
+    });
+  }
+
+  function syncSlider(val) {
+    document.getElementById('grossSalary').value = val;
+    updateCalculation();
+  }
+
+  function updateCalculation() {
+    const gross = parseFloat(document.getElementById('grossSalary').value) || 0;
+    const allowances = parseFloat(document.getElementById('allowances').value) || 0;
+    const period = document.getElementById('periodToggle').value;
+    
+    document.getElementById('salarySlider').value = gross;
+
+    const taxRate = 0.16;
+    const socialRate = 0.0275;
+
+    const multiplier = period === 'annual' ? 12 : 1;
+    document.getElementById('grossLabel').innerText = `Sueldo Bruto ${period === 'annual' ? 'Anual' : 'Mensual'} ($ MXN):`;
+    document.getElementById('netLabel').innerText = `Sueldo Neto en Mano (${period === 'annual' ? 'Anual' : 'Mensual'})`;
+
+    const calcGross = gross * multiplier;
+    const taxableBase = Math.max(0, calcGross - allowances);
+    const taxAmount = taxableBase * taxRate;
+    const socialAmount = taxableBase * socialRate;
+    const netSalary = calcGross - taxAmount - socialAmount;
+
+    document.getElementById('grossDisplay').innerText = '$' + calcGross.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' MXN';
+    document.getElementById('taxDisplay').innerText = '-$' + taxAmount.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' MXN';
+    document.getElementById('socialDisplay').innerText = '-$' + socialAmount.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' MXN';
+    document.getElementById('netAmount').innerText = '$' + netSalary.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' MXN';
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [
+        Math.max(0, netSalary),
+        Math.max(0, taxAmount),
+        Math.max(0, socialAmount)
+      ];
+      chartInstance.update();
+    }
+  }
+
+  function copySummary() {
+    const gross = document.getElementById('grossDisplay').innerText;
+    const tax = document.getElementById('taxDisplay').innerText;
+    const social = document.getElementById('socialDisplay').innerText;
+    const net = document.getElementById('netAmount').innerText;
+    const period = document.getElementById('periodToggle').value === 'annual' ? 'Anual' : 'Mensual';
+
+    const text = `📊 Resumen de Sueldo México (${period}) - SueldoPro.online\n` +
+                 `• Sueldo Bruto: ${gross}\n` +
+                 `• Retención ISR: ${tax}\n` +
+                 `• Cuota IMSS: ${social}\n` +
+                 `---------------------------\n` +
+                 `• Sueldo Neto: ${net}\n\n` +
+                 `Calculado en https://sueldopro.online/mexico/`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.innerText = '✅ ¡Copiado al Portapapeles!';
+      setTimeout(() => { btn.innerText = '📋 Copiar Resumen de Sueldo'; }, 2500);
+    });
+  }
+
+  window.onload = function() {
+    initChart();
+    updateCalculation();
+  };
+</script>
+
 </body>
 </html>
