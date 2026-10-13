@@ -1,105 +1,314 @@
 <!DOCTYPE html>
-<html lang="es-CL">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Sueldo Líquido Chile 2026 | AFP, Fonasa e Impuesto Único</title>
-  <meta name="description" content="Calcula tu sueldo líquido en Chile (CLP) para 2026. Obtén el desglose de descuentos obligatorios de AFP, Fonasa/Isapre, Seguro de Cesantía e Impuesto Único de Segunda Categoría.">
+  
+  <title>Calculadora de Sueldo Neto Chile 2026 | Fonasa, Isapre y AFP</title>
+  <meta name="description" content="Calcula tu salario líquido en Chile (CLP). Desglose de cotizaciones de AFP (10%), Salud Fonasa/Isapre (7%) y Seguro de Cesantía.">
   <link rel="canonical" href="https://sueldopro.online/chile/">
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <link rel="stylesheet" href="/style.css">
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Calculadora de Sueldo Líquido Chile 2026",
-    "url": "https://sueldopro.online/chile/",
-    "applicationCategory": "FinanceApplication",
-    "operatingSystem": "All",
-    "browserRequirements": "Requires JavaScript and HTML5 support",
-    "isAccessibleForFree": true,
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "CLP"
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent-green: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.15);
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: #0f172a;
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
     }
-  }
-  </script>
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 32px 16px;
+    }
+
+    .container { max-width: 1020px; margin: 0 auto; }
+
+    .header-tag { text-align: center; margin-bottom: 32px; }
+    .badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .header-tag h1 { font-size: 2.25rem; font-weight: 800; color: #ffffff; letter-spacing: -0.025em; }
+    .header-tag p { color: var(--text-muted); font-size: 1.05rem; margin-top: 6px; }
+
+    .country-nav { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+    .country-pill {
+      background: var(--card-bg); border: 1px solid var(--card-border); padding: 8px 16px;
+      border-radius: 24px; text-decoration: none; color: var(--text-main); font-weight: 600;
+      font-size: 0.875rem; transition: all 0.2s ease;
+    }
+    .country-pill:hover, .country-pill.active {
+      border-color: var(--primary); color: #60a5fa; transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .app-layout { display: grid; grid-template-columns: 1fr; gap: 28px; margin-bottom: 40px; }
+    @media (min-width: 820px) { .app-layout { grid-template-columns: 1fr 1fr; } }
+
+    .card {
+      background: var(--card-bg); border-radius: 20px; padding: 32px;
+      box-shadow: var(--shadow-lg); border: 1px solid var(--card-border);
+    }
+
+    .form-group { margin-bottom: 22px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 0.925rem; color: #cbd5e1; }
+
+    input, select {
+      width: 100%; padding: 13px 16px; border: 1.5px solid var(--card-border);
+      border-radius: 12px; font-size: 1.05rem; color: #ffffff; background-color: var(--input-bg);
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25); }
+
+    .slider-container { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+    .slider-container input[type="range"] { flex: 1; accent-color: var(--primary); cursor: pointer; }
+
+    .results-display { display: flex; flex-direction: column; height: 100%; justify-content: space-between; }
+
+    .stat-main {
+      text-align: center; padding: 24px; background: var(--accent-glow);
+      border-radius: 16px; border: 1px solid rgba(16, 185, 129, 0.3); margin-bottom: 24px;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+    }
+    .stat-main .amount { font-size: 2.5rem; font-weight: 800; color: var(--accent-green); letter-spacing: -0.03em; }
+    .stat-main .label { font-size: 0.825rem; color: #34d399; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+
+    .breakdown-list { list-style: none; margin-bottom: 24px; }
+    .breakdown-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--card-border); font-size: 0.975rem; }
+    .breakdown-item strong { color: #ffffff; font-weight: 700; }
+
+    .chart-box { max-width: 210px; margin: 12px auto 0 auto; }
+
+    .btn-action {
+      background: var(--primary); color: white; border: none; padding: 14px;
+      border-radius: 12px; font-weight: 700; font-size: 0.975rem; cursor: pointer;
+      width: 100%; margin-top: 12px; transition: all 0.2s; box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+    .btn-action:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 12px;
+      border-radius: 12px; font-weight: 600; font-size: 0.925rem; cursor: pointer;
+      width: 100%; margin-top: 10px; transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: #475569; }
+
+    .content-card { background: var(--card-bg); border-radius: 20px; padding: 36px; border: 1px solid var(--card-border); }
+    .content-card h2 { font-size: 1.5rem; margin-bottom: 14px; color: #ffffff; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+    .content-card h3 { font-size: 1.15rem; margin: 20px 0 10px 0; color: #cbd5e1; }
+    .content-card p, .content-card li { color: var(--text-muted); font-size: 0.975rem; }
+    .content-card ul { margin-left: 20px; margin-bottom: 20px; }
+
+    footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--card-border); text-align: center; font-size: 0.875rem; color: var(--text-muted); }
+    footer a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    footer a:hover { color: #60a5fa; }
+  </style>
 </head>
-<body class="dark-theme">
-  <header>
-    <nav class="nav-container">
-      <a href="/" class="logo">SueldoPro</a>
-      <div class="nav-links">
-        <a href="/mexico/">México</a>
-        <a href="/espana/">España</a>
-        <a href="/colombia/">Colombia</a>
-        <a href="/argentina/">Argentina</a>
-        <a href="/chile/" class="active">Chile</a>
-        <a href="/peru/">Perú</a>
+<body>
+
+<div class="container">
+  <div class="header-tag">
+    <span class="badge">Chile 2026</span>
+    <h1>Calculadora de Sueldo Líquido Chile</h1>
+    <p>Calcula tu sueldo líquido en CLP tras cotizaciones de AFP (10%) y Salud (7%)</p>
+  </div>
+
+  <div class="country-nav">
+    <a href="https://sueldopro.online/" class="country-pill">🌎 Inicio</a>
+    <a href="https://sueldopro.online/mexico/" class="country-pill">🇲🇽 México</a>
+    <a href="https://sueldopro.online/espana/" class="country-pill">🇪🇸 España</a>
+    <a href="https://sueldopro.online/colombia/" class="country-pill">🇨🇴 Colombia</a>
+    <a href="https://sueldopro.online/argentina/" class="country-pill">🇦🇷 Argentina</a>
+    <a href="https://sueldopro.online/chile/" class="country-pill active">🇨🇱 Chile</a>
+    <a href="https://sueldopro.online/peru/" class="country-pill">🇵🇪 Perú</a>
+  </div>
+
+  <div class="app-layout">
+    <div class="card">
+      <div class="form-group">
+        <label for="periodToggle">Periodo de Cálculo:</label>
+        <select id="periodToggle" onchange="updateCalculation()">
+          <option value="monthly">Mensual</option>
+          <option value="annual">Anual (x12)</option>
+        </select>
       </div>
-    </nav>
-  </header>
 
-  <main class="container">
-    <h1>Calculadora de Sueldo Líquido Chile 2026</h1>
-    <p class="subtitle">Calcula el salario líquido a percibir descontando las cotizaciones previsionales de salud y pensión.</p>
-
-    <div class="calculator-card">
-      <form id="calc-form">
-        <div class="form-group">
-          <label for="salary">Sueldo Bruto Imponible (CLP):</label>
-          <input type="number" id="salary" placeholder="Ej. 950000" required step="any">
+      <div class="form-group">
+        <label for="grossSalary" id="grossLabel">Sueldo Bruto Mensual ($ CLP):</label>
+        <input type="number" id="grossSalary" value="950000" min="0" step="any" oninput="updateCalculation()">
+        <div class="slider-container">
+          <input type="range" id="salarySlider" min="0" max="5000000" step="10000" value="950000" oninput="syncSlider(this.value)">
         </div>
-        <button type="submit" class="btn-primary">Calcular Sueldo Líquido</button>
-      </form>
-
-      <div id="results" class="results-card" style="display:none;">
-        <h3>Desglose de Liquidación de Sueldo</h3>
-        <p>Sueldo Bruto Imponible: <span id="res-bruto">$0</span></p>
-        <p>Cotización AFP (~10% + comisión): <span id="res-afp">-$0</span></p>
-        <p>Salud Fonasa/Isapre (7%): <span id="res-salud">-$0</span></p>
-        <p>Seguro de Cesantía (0.6%): <span id="res-cesantia">-$0</span></p>
-        <hr>
-        <h4>Sueldo Líquido Final: <span id="res-neto">$0</span></h4>
       </div>
+
+      <div class="form-group">
+        <label for="allowances">Deducciones Adicionales ($ CLP):</label>
+        <input type="number" id="allowances" value="0" min="0" step="any" oninput="updateCalculation()">
+      </div>
+      
+      <button class="btn-action" onclick="copySummary()" id="copyBtn">📋 Copiar Resumen de Sueldo</button>
+      <button class="btn-secondary" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
     </div>
 
-    <section class="seo-content" style="max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6;">
-      <h2>¿Cómo calcular el Sueldo Líquido en Chile (2026)?</h2>
-      <p>El sueldo líquido resulta de aplicar los descuentos obligatorios del Código del Trabajo sobre tu sueldo bruto imponible:</p>
-      <ul>
-        <li><strong>Fondo de Pensiones (AFP):</strong> Cotización obligatoria del 10% más la comisión de tu administradora.</li>
-        <li><strong>Salud (Fonasa o Isapre):</strong> Descuento legal del 7% obligatorio para tu sistema previsional de salud.</li>
-        <li><strong>Seguro de Cesantía:</strong> Aporte del 0.6% a cargo del trabajador en contratos de plazo indefinido.</li>
-        <li><strong>Impuesto Único de Segunda Categoría:</strong> Tributo progresivo determinado según la tabla del SII.</li>
-      </ul>
-    </section>
-  </main>
+    <div class="card">
+      <div class="results-display">
+        <div class="stat-main">
+          <span class="label" id="netLabel">Sueldo Líquido a Recibir (Mensual)</span>
+          <div class="amount" id="netAmount">$0.00</div>
+        </div>
+
+        <ul class="breakdown-list">
+          <li class="breakdown-item">
+            <span>Sueldo Bruto Base:</span>
+            <strong id="grossDisplay">$0.00</strong>
+          </li>
+          <li class="breakdown-item">
+            <span>Cotización AFP (10%):</span>
+            <strong id="taxDisplay" style="color: #f87171;">-$0.00</strong>
+          </li>
+          <li class="breakdown-item">
+            <span>Salud Fonasa/Isapre (7%):</span>
+            <strong id="socialDisplay" style="color: #fbbf24;">-$0.00</strong>
+          </li>
+        </ul>
+
+        <div class="chart-box">
+          <canvas id="salaryChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-card">
+    <h2>¿Cómo se calcula el sueldo líquido en Chile para 2026?</h2>
+    <p>El sueldo líquido en Chile corresponde al salario bruto imponible restando el 10% obligatorio para el fondo de pensión (AFP) y el 7% para cobertura de salud (Fonasa o Isapre).</p>
+  </div>
 
   <footer>
-    <div class="regional-matrix" style="margin-bottom: 15px; font-size: 0.9em;">
-      <strong>Calculadoras Regionales:</strong> 
-      <a href="/mexico/">Calculadora México (ISR/IMSS)</a> | 
-      <a href="/espana/">Calculadora España (IRPF)</a> | 
-      <a href="/colombia/">Calculadora Colombia (EPS/Pensión)</a> | 
-      <a href="/argentina/">Calculadora Argentina (Ganancias)</a> | 
-      <a href="/chile/">Calculadora Chile (AFP/Fonasa)</a> | 
-      <a href="/peru/">Calculadora Perú (ONP/5ta)</a>
+    <p>© 2026 SueldoPro. Todos los derechos reservados.</p>
+    <div style="margin-top: 10px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+      <a href="https://sueldopro.online/about.html">Sobre Nosotros</a>
+      <a href="https://sueldopro.online/contact.html">Contacto</a>
+      <a href="https://sueldopro.online/privacy.html">Política de Privacidad</a>
+      <a href="https://sueldopro.online/terms.html">Términos de Servicio</a>
     </div>
-    <div class="footer-links">
-      <a href="/about.html">Sobre Nosotros</a> | 
-      <a href="/contact.html">Contacto</a> | 
-      <a href="/privacy.html">Política de Privacidad</a> | 
-      <a href="/terms.html">Términos de Servicio</a>
-    </div>
-    <p>&copy; 2026 SueldoPro. Todos los derechos reservados.</p>
   </footer>
+</div>
 
-  <script src="/script.js"></script>
+<script>
+  let chartInstance = null;
+
+  function initChart() {
+    const ctx = document.getElementById('salaryChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Sueldo Líquido', 'AFP', 'Salud'],
+        datasets: [{
+          data: [83, 10, 7],
+          backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        cutout: '72%'
+      }
+    });
+  }
+
+  function syncSlider(val) {
+    document.getElementById('grossSalary').value = val;
+    updateCalculation();
+  }
+
+  function updateCalculation() {
+    const gross = parseFloat(document.getElementById('grossSalary').value) || 0;
+    const allowances = parseFloat(document.getElementById('allowances').value) || 0;
+    const period = document.getElementById('periodToggle').value;
+    
+    document.getElementById('salarySlider').value = gross;
+
+    const afpRate = 0.10;
+    const healthRate = 0.07;
+
+    const multiplier = period === 'annual' ? 12 : 1;
+    document.getElementById('grossLabel').innerText = `Sueldo Bruto ${period === 'annual' ? 'Anual' : 'Mensual'} ($ CLP):`;
+    document.getElementById('netLabel').innerText = `Sueldo Líquido a Recibir (${period === 'annual' ? 'Anual' : 'Mensual'})`;
+
+    const calcGross = gross * multiplier;
+    const taxableBase = Math.max(0, calcGross - allowances);
+    const afpAmount = taxableBase * afpRate;
+    const healthAmount = taxableBase * healthRate;
+    const netSalary = calcGross - afpAmount - healthAmount;
+
+    document.getElementById('grossDisplay').innerText = '$' + calcGross.toLocaleString('es-CL', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' CLP';
+    document.getElementById('taxDisplay').innerText = '-$' + afpAmount.toLocaleString('es-CL', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' CLP';
+    document.getElementById('socialDisplay').innerText = '-$' + healthAmount.toLocaleString('es-CL', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' CLP';
+    document.getElementById('netAmount').innerText = '$' + netSalary.toLocaleString('es-CL', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' CLP';
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = [
+        Math.max(0, netSalary),
+        Math.max(0, afpAmount),
+        Math.max(0, healthAmount)
+      ];
+      chartInstance.update();
+    }
+  }
+
+  function copySummary() {
+    const gross = document.getElementById('grossDisplay').innerText;
+    const tax = document.getElementById('taxDisplay').innerText;
+    const social = document.getElementById('socialDisplay').innerText;
+    const net = document.getElementById('netAmount').innerText;
+    const period = document.getElementById('periodToggle').value === 'annual' ? 'Anual' : 'Mensual';
+
+    const text = `📊 Resumen de Sueldo Chile (${period}) - SueldoPro.online\n` +
+                 `• Sueldo Bruto: ${gross}\n` +
+                 `• Cotización AFP: ${tax}\n` +
+                 `• Salud Fonasa/Isapre: ${social}\n` +
+                 `---------------------------\n` +
+                 `• Sueldo Líquido: ${net}\n\n` +
+                 `Calculado en https://sueldopro.online/chile/`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.innerText = '✅ ¡Copiado al Portapapeles!';
+      setTimeout(() => { btn.innerText = '📋 Copiar Resumen de Sueldo'; }, 2500);
+    });
+  }
+
+  window.onload = function() {
+    initChart();
+    updateCalculation();
+  };
+</script>
+
 </body>
 </html>
